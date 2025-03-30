@@ -1,12 +1,9 @@
 #include "IUeRelayMock.hpp"
 
-namespace bts
-{
+namespace bts {
 
-IUeRelayMock::IUeRelayMock()
-{}
+IUeRelayMock::IUeRelayMock() {}
 
-IUeRelayMock::~IUeRelayMock()
-{}
+IUeRelayMock::~IUeRelayMock() {}
 
-}
+} // namespace bts

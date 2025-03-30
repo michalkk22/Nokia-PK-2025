@@ -1,4 +1,4 @@
-name: Clang Format Check
+name: Auto Clang Format
 
 on:
   push:
@@ -12,10 +12,22 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-      
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+
       - name: Install clang-format
         run: sudo apt-get install clang-format -y
 
       - name: Run clang-format
         run: |
-          find . -name "*.cpp" -o -name "*.h" | xargs clang-format -style=file -output-replacements-xml | grep "<replacement " && exit 1 || exit 0
+          find . -name "*.cpp" -o -name "*.h" | xargs clang-format -style=file -i
+
+      - name: Commit changes
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add .
+          git diff --quiet && git diff --staged --quiet || git commit -m "Apply clang-format fixes"
+          git push

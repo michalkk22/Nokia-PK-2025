@@ -1,14 +1,9 @@
 #include "ILoggerMock.hpp"
 
-namespace common
-{
+namespace common {
 
-ILoggerMock::ILoggerMock()
-{}
+ILoggerMock::ILoggerMock() {}
 
-ILoggerMock::~ILoggerMock()
-{}
+ILoggerMock::~ILoggerMock() {}
 
-}
-
-
+} // namespace common
