@@ -1,0 +1,19 @@
+name: Clang Format Check
+
+on:
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  clang-format:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      
+      - name: Install clang-format
+        run: sudo apt-get install clang-format -y
+
+      - name: Run clang-format
+        run: |
+          find . -name "*.cpp" -o -name "*.h" | xargs clang-format -style=file -output-replacements-xml | grep "<replacement " && exit 1 || exit 0
