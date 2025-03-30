@@ -1,12 +1,9 @@
 #include "ITransportMock.hpp"
 
-namespace common
-{
+namespace common {
 
-ITransportMock::ITransportMock()
-{}
+ITransportMock::ITransportMock() {}
 
-ITransportMock::~ITransportMock()
-{}
+ITransportMock::~ITransportMock() {}
 
-}
+} // namespace common

@@ -1,12 +1,9 @@
 #include "IApplicationEnvironmentMock.hpp"
 
-namespace bts
-{
+namespace bts {
 
-IApplicationEnvironmentMock::IApplicationEnvironmentMock()
-{}
+IApplicationEnvironmentMock::IApplicationEnvironmentMock() {}
 
-IApplicationEnvironmentMock::~IApplicationEnvironmentMock()
-{}
+IApplicationEnvironmentMock::~IApplicationEnvironmentMock() {}
 
-}
+} // namespace bts

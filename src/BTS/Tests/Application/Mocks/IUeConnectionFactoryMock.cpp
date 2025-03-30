@@ -1,12 +1,9 @@
 #include "IUeConnectionFactoryMock.hpp"
 
-namespace bts
-{
+namespace bts {
 
-IUeConnectionFactoryMock::IUeConnectionFactoryMock()
-{}
+IUeConnectionFactoryMock::IUeConnectionFactoryMock() {}
 
-IUeConnectionFactoryMock::~IUeConnectionFactoryMock()
-{}
+IUeConnectionFactoryMock::~IUeConnectionFactoryMock() {}
 
-}
+} // namespace bts

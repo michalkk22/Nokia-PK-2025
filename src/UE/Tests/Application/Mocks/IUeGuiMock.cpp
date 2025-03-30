@@ -1,7 +1,6 @@
 #include "IUeGuiMock.hpp"
 
-namespace ue
-{
+namespace ue {
 
 IUeGuiMock::IUeGuiMock() = default;
 IUeGuiMock::~IUeGuiMock() = default;
@@ -21,4 +20,4 @@ ICallModeMock::~ICallModeMock() = default;
 IDialModeMock::IDialModeMock() = default;
 IDialModeMock::~IDialModeMock() = default;
 
-}
+} // namespace ue

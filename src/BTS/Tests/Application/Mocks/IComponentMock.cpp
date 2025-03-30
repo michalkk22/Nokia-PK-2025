@@ -1,12 +1,9 @@
 #include "IComponentMock.hpp"
 
-namespace bts
-{
+namespace bts {
 
-IComponentMock::IComponentMock()
-{}
+IComponentMock::IComponentMock() {}
 
-IComponentMock::~IComponentMock()
-{}
+IComponentMock::~IComponentMock() {}
 
-}
+} // namespace bts

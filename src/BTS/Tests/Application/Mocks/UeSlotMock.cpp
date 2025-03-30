@@ -1,12 +1,9 @@
 #include "UeSlotMock.hpp"
 
-namespace bts
-{
+namespace bts {
 
-IUeSlotImplMock::IUeSlotImplMock()
-{}
+IUeSlotImplMock::IUeSlotImplMock() {}
 
-IUeSlotImplMock::~IUeSlotImplMock()
-{}
+IUeSlotImplMock::~IUeSlotImplMock() {}
 
-}
+} // namespace bts

@@ -1,12 +1,9 @@
 #include "IConsoleMock.hpp"
 
-namespace bts
-{
+namespace bts {
 
-IConsoleMock::IConsoleMock()
-{}
+IConsoleMock::IConsoleMock() {}
 
-IConsoleMock::~IConsoleMock()
-{}
+IConsoleMock::~IConsoleMock() {}
 
-}
+} // namespace bts

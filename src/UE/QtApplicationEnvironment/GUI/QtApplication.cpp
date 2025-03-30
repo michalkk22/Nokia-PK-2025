@@ -1,6 +1,3 @@
 #include "QtApplication.hpp"
 
-namespace ue
-{
-
-}
+namespace ue {}

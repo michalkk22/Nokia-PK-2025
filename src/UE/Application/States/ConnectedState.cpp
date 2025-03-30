@@ -1,11 +1,8 @@
 #include "ConnectedState.hpp"
 
-namespace ue
-{
+namespace ue {
 
 ConnectedState::ConnectedState(Context &context)
-    : BaseState(context, "ConnectedState")
-{
-}
+    : BaseState(context, "ConnectedState") {}
 
-}
+} // namespace ue
