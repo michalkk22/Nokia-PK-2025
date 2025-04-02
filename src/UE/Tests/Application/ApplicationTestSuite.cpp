@@ -2,30 +2,79 @@
 #include <gtest/gtest.h>
 
 #include "Application.hpp"
-#include "Messages/PhoneNumber.hpp"
-#include "Mocks/IBtsPortMock.hpp"
 #include "Mocks/ILoggerMock.hpp"
-#include "Mocks/ITimerPortMock.hpp"
+#include "Mocks/IBtsPortMock.hpp"
 #include "Mocks/IUserPortMock.hpp"
+#include "Mocks/ITimerPortMock.hpp"
+#include "Messages/PhoneNumber.hpp"
 #include <memory>
 
-namespace ue {
+namespace ue
+{
 using namespace ::testing;
 
-class ApplicationTestSuite : public Test {
-protected:
-  const common::PhoneNumber PHONE_NUMBER{112};
-  NiceMock<common::ILoggerMock> loggerMock;
-  StrictMock<IBtsPortMock> btsPortMock;
-  StrictMock<IUserPortMock> userPortMock;
-  StrictMock<ITimerPortMock> timerPortMock;
+struct ApplicationTestSuite : Test
+{
+    const common::PhoneNumber PHONE_NUMBER{112};
+    const common::BtsId BTS_ID{1024};
+    NiceMock<common::ILoggerMock> loggerMock;
+    StrictMock<IBtsPortMock> btsPortMock;
+    StrictMock<IUserPortMock> userPortMock;
+    StrictMock<ITimerPortMock> timerPortMock;
 
-  Application objectUnderTest{PHONE_NUMBER, loggerMock, btsPortMock,
-                              userPortMock, timerPortMock};
+    Expectation showNotConnected = EXPECT_CALL(userPortMock, showNotConnected());
+    Application objectUnderTest{PHONE_NUMBER,
+                                loggerMock,
+                                btsPortMock,
+                                userPortMock,
+                                timerPortMock};
 };
 
-struct ApplicationNotConnectedTestSuite : ApplicationTestSuite {};
+struct ApplicationNotConnectedTestSuite : ApplicationTestSuite
+{
+    void sendAttachRequestOnSib();
+};
 
-TEST_F(ApplicationNotConnectedTestSuite, todo) {}
+void ApplicationNotConnectedTestSuite::sendAttachRequestOnSib()
+{
+    using namespace std::chrono_literals;
+    EXPECT_CALL(btsPortMock, sendAttachRequest(BTS_ID));
+    EXPECT_CALL(timerPortMock, startTimer(500ms));
+    EXPECT_CALL(userPortMock, showConnecting());
+    objectUnderTest.handleSib(BTS_ID);
+}
 
-} // namespace ue
+TEST_F(ApplicationNotConnectedTestSuite, shallSendAttachRequestOnSib)
+{
+    sendAttachRequestOnSib();
+}
+
+struct ApplicationConnectingTestSuite : ApplicationNotConnectedTestSuite
+{
+    ApplicationConnectingTestSuite()
+    {
+        sendAttachRequestOnSib();
+    }
+};
+
+TEST_F(ApplicationConnectingTestSuite, shallConnectOnAttachAccept)
+{
+    EXPECT_CALL(timerPortMock, stopTimer());
+    EXPECT_CALL(userPortMock, showConnected());
+    objectUnderTest.handleAttachAccept();
+}
+
+TEST_F(ApplicationConnectingTestSuite, shallDisConnectOnAttachReject)
+{
+    EXPECT_CALL(timerPortMock, stopTimer());
+    EXPECT_CALL(userPortMock, showNotConnected());
+    objectUnderTest.handleAttachReject();
+}
+
+TEST_F(ApplicationConnectingTestSuite, shallDisConnectOnTimeout)
+{
+    EXPECT_CALL(userPortMock, showNotConnected());
+    objectUnderTest.handleTimeout();
+}
+
+}
