@@ -1,12 +1,10 @@
 #include "ConnectedState.hpp"
 
-namespace ue
-{
+namespace ue {
 
 ConnectedState::ConnectedState(Context &context)
-    : BaseState(context, "ConnectedState")
-{
-    context.user.showConnected();
+    : BaseState(context, "ConnectedState") {
+  context.user.showConnected();
 }
 
 } // namespace ue
