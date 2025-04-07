@@ -8,7 +8,7 @@ namespace ue
 class ConnectingState : public BaseState
 {
 public:
-    ConnectingState(Context& context);
+    ConnectingState(Context& context, common::BtsId btsId);
 
     // IBtsEventsHandler interface
     void handleAttachAccept() override;
@@ -16,6 +16,10 @@ public:
 
     // ITimerEventsHandler interface
     void handleTimeout() override;
+    void handleDisconnected() override;
+
+private:
+    common::BtsId btsId;
 };
 
 }

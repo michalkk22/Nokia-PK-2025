@@ -3,13 +3,13 @@
 
 namespace ue {
 
-UserPort::UserPort(common::ILogger &logger, IUeGui &gui,
+UserPort::UserPort(common::ILogger &logger, IUeGui &gui, 
                    common::PhoneNumber phoneNumber)
     : logger(logger, "[USER-PORT]"), gui(gui), phoneNumber(phoneNumber) {}
 
 void UserPort::start(IUserEventsHandler &handler) {
-  this->handler = &handler;
-  gui.setTitle("Nokia " + to_string(phoneNumber));
+    this->handler = &handler;
+    gui.setTitle("Nokia " + to_string(phoneNumber));
 }
 
 void UserPort::stop() { handler = nullptr; }
@@ -19,10 +19,16 @@ void UserPort::showNotConnected() { gui.showNotConnected(); }
 void UserPort::showConnecting() { gui.showConnecting(); }
 
 void UserPort::showConnected() {
-  IUeGui::IListViewMode &menu = gui.setListViewMode();
-  menu.clearSelectionList();
-  menu.addSelectionListItem("Compose SMS", "");
-  menu.addSelectionListItem("View SMS", "");
+    IUeGui::IListViewMode &menu = gui.setListViewMode();
+    menu.clearSelectionList();
+    menu.addSelectionListItem("Compose SMS", "");
+    menu.addSelectionListItem("View SMS", "");
+}
+
+void UserPort::showNewSms()
+{
+    logger.logInfo("New SMS notification");
+    gui.showNewSms(true);
 }
 
 } // namespace ue
