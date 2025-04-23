@@ -19,7 +19,7 @@ namespace ue
         }
 
         const SmsMessage &message = allSms[viewingSmsIndex];
-        logger.logInfo("Opening SMS at index ", viewingSmsIndex, " (Sender: ", message.from, ")");
+        logger.logInfo("Opening SMS at index ", viewingSmsIndex, " (Sender: ", message.fromNumber, ")");
         if (!message.isRead)
         {
             logger.logDebug("Updating SMS status to 'read' at index ", viewingSmsIndex);

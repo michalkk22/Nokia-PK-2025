@@ -63,7 +63,7 @@ void UserPort::displaySmsList(const std::vector<SmsMessage>& smsList)
     {
         std::string statusLabel = msg.isRead ? "  " : "New: ";
         std::string entry = statusLabel + "From: " + common::to_string(msg.fromNumber);
-        listView.addSelectionListItem(entry, msg.text);
+        listView.addSelectionListItem(entry, msg.message);
     }
 }
 
@@ -73,7 +73,7 @@ void UserPort::displaySmsContent(const SmsMessage& sms)
     logger.logInfo("Opening SMS from number: ", sms.fromNumber);
 
     IUeGui::ITextMode& textMode = gui.setViewTextMode();
-    std::string content = "From: " + common::to_string(sms.fromNumber) + "\n\n" + sms.text;
+    std::string content = "From: " + common::to_string(sms.fromNumber) + "\n\n" + sms.message;
     textMode.setText(content);
 }
 
@@ -104,7 +104,7 @@ void UserPort::acceptCallback()
         return;
      }
     
-    logger.logDebug("User triggered accept - ViewMode: ", currentViewMode, ", Selected Index: ", (selectedIdx ? std::to_string(*selectedIdx) : "None"));
+    logger.logDebug("User triggered accept - ViewMode: ", currentViewMode, ", Selected Index: ", (selectedIndexOpt ? std::to_string(*selectedIndexOpt) : "None"));
     handler->handleUiAction(selectedIndexOpt);
 }
 

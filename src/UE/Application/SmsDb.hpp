@@ -11,11 +11,11 @@ namespace ue
 
 struct SmsMessage
 {
-    common::PhoneNumber from;
-    std::string text;
+    common::PhoneNumber fromNumber;
+    std::string message;
     bool isRead;
-    SmsMessage(common::PhoneNumber from, std::string text, bool isRead = false)
-        : from(from), text(text), isRead(isRead)
+    SmsMessage(common::PhoneNumber fromNumber, std::string message, bool isRead = false)
+        : fromNumber(fromNumber), message(message), isRead(isRead)
     {}
 };
 
@@ -23,7 +23,7 @@ class SmsDb
 {
 public:
     SmsDb() = default;
-    std::size_t addSms(common::PhoneNumber from, const std::string& text);
+    std::size_t addSms(common::PhoneNumber fromNumber, const std::string& message);
     const std::vector<SmsMessage>& getAllSms() const;
     std::size_t getUnreadCount() const;
     bool markAsRead(std::size_t index);

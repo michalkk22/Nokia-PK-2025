@@ -19,8 +19,8 @@ TEST_F(SmsDbTestSuite, shouldStoreNewSms)
     std::size_t smsIndex = smsDbInstance.addSms(senderPhoneNumber, firstTestMessage);
     ASSERT_EQ(0u, smsIndex);
     ASSERT_EQ(1u, smsDbInstance.getAllSms().size());
-    ASSERT_EQ(senderPhoneNumber, smsDbInstance.getAllSms()[0].from);
-    ASSERT_EQ(firstTestMessage, smsDbInstance.getAllSms()[0].text);
+    ASSERT_EQ(senderPhoneNumber, smsDbInstance.getAllSms()[0].fromNumber);
+    ASSERT_EQ(firstTestMessage, smsDbInstance.getAllSms()[0].message);
     ASSERT_FALSE(smsDbInstance.getAllSms()[0].isRead);
 }
 
