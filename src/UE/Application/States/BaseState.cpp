@@ -27,4 +27,13 @@ void BaseState::handleDisconnected() { logger.logError("Uexpected: handleDisconn
 
 void BaseState::handleSmsReceived(common::PhoneNumber fromNumber, std::string message) { logger.logError("Uexpected: handleSmsReceived from: ", fromNumber, " text: ", message); }
 
+void BaseState::handleUiAction(std::optional<std::size_t> selectedIndex) {
+        std::string indexStr = selectedIndex.has_value() ? std::to_string(selectedIndex.value()) : "none";
+        logger.logError("Unexpected: handleUiAction, index: ", indexStr);
+}
+
+void BaseState::handleUiBack() {
+        logger.logError("Unexpected: handleUiBack");
+}
+
 } // namespace ue

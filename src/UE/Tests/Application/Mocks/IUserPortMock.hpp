@@ -2,6 +2,9 @@
 
 #include <gmock/gmock.h>
 #include "Ports/IUserPort.hpp"
+#include "Application/SmsDb.hpp"
+#include <vector>
+#include <string>
 
 namespace ue
 {
@@ -20,10 +23,13 @@ public:
     IUserPortMock();
     ~IUserPortMock() override;
 
-    MOCK_METHOD(void, showNotConnected, (), (final));
-    MOCK_METHOD(void, showConnecting, (), (final));
-    MOCK_METHOD(void, showConnected, (), (final));
+    MOCK_METHOD(void, showNotConnected, (), (override));
+    MOCK_METHOD(void, showConnecting, (), (override));
+    MOCK_METHOD(void, showConnected, (), (override));
     MOCK_METHOD(void, showNewSms, (), (override));
+    MOCK_METHOD(void, displaySmsList, (const std::vector<SmsMessage>& messages), (override));
+    MOCK_METHOD(void, displaySmsContent, (const SmsMessage& message), (override));
+    MOCK_METHOD(void, displayAlert, (const std::string& title, const std::string& message), (override));
 };
 
 }
