@@ -5,8 +5,8 @@
 namespace ue {
 
     BtsPort::BtsPort(common::ILogger &logger, common::ITransport &transport, common::PhoneNumber phoneNumber)
-        : logger(logger, "[BTS-PORT]"), transport(transport),
-          phoneNumber(phoneNumber) {}
+    : logger(logger, "[BTS-PORT]"), transport(transport),
+      phoneNumber(phoneNumber) {}
 
     void BtsPort::start(IBtsEventsHandler &handler) {
         transport.registerMessageCallback(
@@ -44,11 +44,18 @@ namespace ue {
             }
             case common::MessageId::Sms: {
                 std::string message = reader.readRemainingText();
-                handler->handleSmsReceived(fromNumber, message);
+                if (handler) handler->handleSmsReceived(fromNumber, message);
+                break;
+            }
+            case common::MessageId::UnknownRecipient:
+            {
+                auto originalRecipient = reader.readPhoneNumber();
+                logger.logError("Failed to send SMS – Recipient not found.", originalRecipient);
+                if (handler) handler->handleSmsSentResult(originalRecipient, false);
                 break;
             }
             default:
-                logger.logError("unknow message: ", msgId, ", from: ", fromNumber);
+                logger.logError("unknown message: ", msgId, ", from: ", fromNumber);
             }
         } catch (std::exception const &ex) {
             logger.logError("handleMessage error: ", ex.what());
@@ -67,6 +74,15 @@ namespace ue {
                                     phoneNumber,
                                     common::PhoneNumber{}};
         msg.writeBtsId(btsId);
+        transport.sendMessage(msg.getMessage());
+    }
+    void BtsPort::sendSms(common::PhoneNumber to, const std::string& text)
+    {
+        logger.logInfo("Sending SMS to: ", to);
+        common::OutgoingMessage msg{common::MessageId::Sms,
+                                    phoneNumber,  
+                                    to};                
+        msg.writeText(text);
         transport.sendMessage(msg.getMessage());
     }
 

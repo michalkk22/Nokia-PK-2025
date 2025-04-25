@@ -9,10 +9,10 @@ namespace ue {
                              IBtsPort &bts,
                              IUserPort &user,
                              ITimerPort &timer)
-        : context{iLogger, bts, user, timer},
+          : context{iLogger, bts, user, timer, SmsDb(), nullptr, phoneNumber},
           logger(iLogger, "[APP] ")
     {
-        logger.logInfo("Started");
+        logger.logInfo("Started ", context.myPhoneNumber);
         context.setState<NotConnectedState>();
     }
 
@@ -44,5 +44,19 @@ namespace ue {
         logger.logInfo("SMS received from: ", fromNumber);
         if (context.state) context.state->handleSmsReceived(fromNumber, message);
     }
+
+    void Application::handleSmsSentResult(common::PhoneNumber to, bool success)
+     {
+        logger.logInfo("SMS send result - Recipient: ", to, ", Status: ", success ? "Delivered" : "Failed");         
+        if (context.state) context.state->handleSmsSentResult(to, success);
+     }
+ 
+     void Application::handleSmsComposeResult(common::PhoneNumber recipient, const std::string &text)
+     {
+         context.smsDb.addSentSms(recipient, text);
+         context.bts.sendSms(recipient, text);
+ 
+         context.setState<ConnectedState>();
+     }
 
 }

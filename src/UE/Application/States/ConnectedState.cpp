@@ -1,10 +1,10 @@
 #include "ConnectedState.hpp"
 #include "NotConnectedState.hpp"
 #include "ViewSmsListState.hpp" 
+#include "ComposeSmsState.hpp"
 #include <vector>
 
 namespace ue {
-
     ConnectedState::ConnectedState(Context &context)
         : BaseState(context, "ConnectedState")
     {
@@ -14,8 +14,8 @@ namespace ue {
     void ConnectedState::showMainMenu()
     {
         logger.logInfo("Entered Connected state.");
-        context.user.showConnected();
-    }
+        context.user.showConnected(); 
+        }
 
     void ConnectedState::handleDisconnected()
     {
@@ -27,7 +27,7 @@ namespace ue {
     {
         logger.logInfo("Received SMS from: ", fromNumber, " with content: ", message);
 
-        std::size_t smsIndex = context.smsDb.addSms(fromNumber, message);
+        std::size_t smsIndex = context.smsDb.addReceivedSms(fromNumber, message);
         logger.logDebug("Stored SMS at index: ", smsIndex);
         
         context.user.showNewSms();
@@ -42,16 +42,37 @@ namespace ue {
 
         std::size_t index = selectedIndex.value();
         logger.logInfo("User selected main menu option with index: ", index);
-
-        if (index == 0) { logger.logInfo("SMS composition option triggered – functionality pending");}
-        else if (index == 1)
+    
+        switch (index)
         {
-            logger.logInfo("Navigating to SMS list view");
+        case 0:
+            logger.logInfo("Compose SMS selected");
+            context.setState<ComposeSmsState>();
+            break;
+            
+        case 1:
+            logger.logInfo("View SMS selected");
             context.setState<ViewSmsListState>();
+            break;
+            
+        default:
+            logger.logError("Invalid menu option selected: ", index);
+            break;
         }
-        else { logger.logInfo("Unhandled menu selection. Index provided: ", index); }
     }
 
     void ConnectedState::handleUiBack() { logger.logInfo("Back button pressed in main menu – no action taken"); }
 
-}
+    void ConnectedState::handleSmsSentResult(common::PhoneNumber to, bool success)
+    {
+        logger.logInfo("Received SMS send result for ", to, " while in main menu. Success: ", success);
+        if (!success) {
+            if (!context.smsDb.markLastOutgoingSmsAsFailed()) {
+                logger.logInfo("Could not mark last outgoing SMS as failed.");
+            }
+            context.user.displayAlert("SMS Failed", "Could not send SMS to " + common::to_string(to));
+        }
+    }
+
+
+} // namespace ue

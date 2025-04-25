@@ -16,20 +16,20 @@ protected:
 
 TEST_F(SmsDbTestSuite, shouldStoreNewSms)
 {
-    std::size_t smsIndex = smsDbInstance.addSms(senderPhoneNumber, firstTestMessage);
+    std::size_t smsIndex = smsDbInstance.addReceivedSms(senderPhoneNumber, firstTestMessage);
     ASSERT_EQ(0u, smsIndex);
     ASSERT_EQ(1u, smsDbInstance.getAllSms().size());
     ASSERT_EQ(senderPhoneNumber, smsDbInstance.getAllSms()[0].fromNumber);
-    ASSERT_EQ(firstTestMessage, smsDbInstance.getAllSms()[0].message);
-    ASSERT_FALSE(smsDbInstance.getAllSms()[0].isRead);
+    ASSERT_EQ(firstTestMessage, smsDbInstance.getAllSms()[0].text);
+    ASSERT_EQ(SmsMessage::Status::RECEIVED_UNREAD, smsDbInstance.getAllSms()[0].status);
 }
 
 TEST_F(SmsDbTestSuite, shouldCountUnreadSms)
 {
-    smsDbInstance.addSms(senderPhoneNumber, firstTestMessage);
+    smsDbInstance.addReceivedSms(senderPhoneNumber, firstTestMessage);
     ASSERT_EQ(1u, smsDbInstance.getUnreadCount());
     
-    smsDbInstance.addSms(senderPhoneNumber, secondTestMessage);
+    smsDbInstance.addReceivedSms(senderPhoneNumber, secondTestMessage);
     ASSERT_EQ(2u, smsDbInstance.getUnreadCount());
     
     smsDbInstance.markAsRead(0);
@@ -41,12 +41,12 @@ TEST_F(SmsDbTestSuite, shouldCountUnreadSms)
 
 TEST_F(SmsDbTestSuite, shouldMarkSmsAsRead)
 {
-    smsDbInstance.addSms(senderPhoneNumber, firstTestMessage);
-    ASSERT_FALSE(smsDbInstance.getAllSms()[0].isRead);
+    smsDbInstance.addReceivedSms(senderPhoneNumber, firstTestMessage);
+    ASSERT_EQ(SmsMessage::Status::RECEIVED_UNREAD, smsDbInstance.getAllSms()[0].status);
     
     bool result = smsDbInstance.markAsRead(0);
     ASSERT_TRUE(result);
-    ASSERT_TRUE(smsDbInstance.getAllSms()[0].isRead);
+    ASSERT_EQ(SmsMessage::Status::RECEIVED_READ, smsDbInstance.getAllSms()[0].status);
     
     // Invalid index
     result = smsDbInstance.markAsRead(1);

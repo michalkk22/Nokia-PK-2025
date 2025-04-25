@@ -14,7 +14,8 @@ set(APPLICATION_SOURCES
     States/ConnectedState.cpp          
     States/NotConnectedState.cpp
     States/ViewSmsListState.cpp     
-    States/ViewSmsState.cpp   
+    States/ViewSmsState.cpp  
+    States/ComposeSmsState.cpp 
 )
 
 add_library(${PROJECT_NAME} ${APPLICATION_SOURCES})

@@ -22,7 +22,15 @@ namespace ue
         }
         else
         {
-            context.user.displaySmsList(currentSmsList); 
+            logger.logDebug("Displaying SMS list with updated statuses:");
+            for (size_t i = 0; i < currentSmsList.size(); ++i)
+            {
+                const auto &msg = currentSmsList[i];
+                bool isRead = (msg.direction == SmsMessage::Direction::INCOMING) ? (msg.status == SmsMessage::Status::RECEIVED_READ) : true;
+                logger.logDebug("SMS #", i, ": ", common::to_string(msg.fromNumber),
+                                " - Read: ", isRead ? "Yes" : "No");
+            }
+            context.user.displaySmsList(currentSmsList);
         }
     }
 
@@ -35,6 +43,12 @@ namespace ue
         }
 
         std::size_t index = selectedIndex.value();
+        if (currentSmsList.empty())
+        {
+            logger.logError("Cannot select SMS from empty list");
+            context.user.displayAlert("Error", "No messages available");
+            return;
+        }
         if (index < currentSmsList.size())
         {
             logger.logInfo("User tapped SMS at position ", index);
@@ -61,7 +75,7 @@ namespace ue
     void ViewSmsListState::handleSmsReceived(common::PhoneNumber from, std::string text)
     {
         logger.logInfo("New SMS arrived while viewing list. Sender: ", from);
-        std::size_t smsIndex = context.smsDb.addSms(from, text);
+        std::size_t smsIndex = context.smsDb.addReceivedSms(from, text);
         logger.logDebug("Stored new SMS at position ", smsIndex);
         context.user.showNewSms();
         showList();
