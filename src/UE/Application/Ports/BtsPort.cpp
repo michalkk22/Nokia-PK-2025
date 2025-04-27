@@ -12,11 +12,13 @@ BtsPort::BtsPort(common::ILogger &logger, common::ITransport &transport,
 void BtsPort::start(IBtsEventsHandler &handler) {
   transport.registerMessageCallback(
       [this](BinaryMessage msg) { handleMessage(msg); });
+  transport.registerDisconnectedCallback([this]() { handleDisconnected(); });
   this->handler = &handler;
 }
 
 void BtsPort::stop() {
   transport.registerMessageCallback(nullptr);
+  transport.registerDisconnectedCallback(nullptr);
   handler = nullptr;
 }
 
@@ -24,7 +26,7 @@ void BtsPort::handleMessage(BinaryMessage msg) {
   try {
     common::IncomingMessage reader{msg};
     auto msgId = reader.readMessageId();
-    auto from = reader.readPhoneNumber();
+    auto fromNumber = reader.readPhoneNumber();
     auto to = reader.readPhoneNumber();
 
     switch (msgId) {
@@ -41,12 +43,32 @@ void BtsPort::handleMessage(BinaryMessage msg) {
         handler->handleAttachReject();
       break;
     }
+    case common::MessageId::Sms: {
+      std::string message = reader.readRemainingText();
+      if (handler)
+        handler->handleSmsReceived(fromNumber, message);
+      break;
+    }
+    case common::MessageId::UnknownRecipient: {
+      auto originalRecipient = reader.readPhoneNumber();
+      logger.logError("Failed to send SMS – Recipient not found.",
+                      originalRecipient);
+      if (handler)
+        handler->handleSmsSentResult(originalRecipient, false);
+      break;
+    }
     default:
-      logger.logError("unknow message: ", msgId, ", from: ", from);
+      logger.logError("unknown message: ", msgId, ", from: ", fromNumber);
     }
   } catch (std::exception const &ex) {
     logger.logError("handleMessage error: ", ex.what());
   }
+}
+
+void BtsPort::handleDisconnected() {
+  logger.logInfo("Transport disconnected");
+  if (handler)
+    handler->handleDisconnected();
 }
 
 void BtsPort::sendAttachRequest(common::BtsId btsId) {
@@ -54,6 +76,12 @@ void BtsPort::sendAttachRequest(common::BtsId btsId) {
   common::OutgoingMessage msg{common::MessageId::AttachRequest, phoneNumber,
                               common::PhoneNumber{}};
   msg.writeBtsId(btsId);
+  transport.sendMessage(msg.getMessage());
+}
+void BtsPort::sendSms(common::PhoneNumber to, const std::string &text) {
+  logger.logInfo("Sending SMS to: ", to);
+  common::OutgoingMessage msg{common::MessageId::Sms, phoneNumber, to};
+  msg.writeText(text);
   transport.sendMessage(msg.getMessage());
 }
 

@@ -42,6 +42,11 @@ PhoneNumber QtSmsComposeMode::getPhoneNumber() const {
   return QtUeModeWidget::getPhoneNumber();
 }
 
+std::pair<common::PhoneNumber, std::string>
+QtSmsComposeMode::getComposedSmsData() {
+  return {getPhoneNumber(), getSmsText()};
+}
+
 std::string QtSmsComposeMode::getSmsText() const {
   return getText().toStdString();
 }
@@ -56,6 +61,13 @@ void QtSmsComposeMode::activateForViewingSms() {
 
 void QtSmsComposeMode::setSmsText(const std::string &value) {
   emit setSmsTextSignal(QString::fromStdString(value));
+}
+
+void QtSmsComposeMode::setPhoneNumber(const PhoneNumber &phoneNumber) {
+  QLineEdit *phoneEdit = findChild<QLineEdit *>();
+  if (phoneEdit) {
+    phoneEdit->clear();
+  }
 }
 
 } // namespace ue

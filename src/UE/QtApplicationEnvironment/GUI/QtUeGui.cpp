@@ -39,7 +39,6 @@ void QtUeGui::initGUI() {
                               "border-image:url(\"images/cell_phone.png\") "
                               "0 0 0 0 stretch stretch;}");
 
-  // init stacked widget
   frame.setFrameStyle(QFrame::Box | QFrame::Raised);
   frame.setFixedSize(cellPhoneSize.width() * 307 / 412,
                      cellPhoneSize.height() * 540 / 800);
@@ -151,8 +150,8 @@ void QtUeGui::onRejectClicked() {
 }
 
 void QtUeGui::onHomeClicked() {
-  if (homeCallback) {
-    homeCallback();
+  if (mailCallback) {
+    mailCallback();
   }
 }
 
@@ -171,6 +170,8 @@ void QtUeGui::setAcceptCallback(Callback callback) {
 void QtUeGui::setRejectCallback(Callback callback) {
   rejectCallback = callback;
 }
+
+void QtUeGui::setMailCallback(Callback callback) { mailCallback = callback; }
 
 void QtUeGui::setTitle(const std::string &title) {
   mainWindow.setWindowTitle(QString::fromStdString(title));
@@ -214,6 +215,16 @@ template <typename ModeObject>
 ModeObject &QtUeGui::activateMode(ModeObject &modeObject) {
   modeObject.activate();
   return modeObject;
+}
+
+IUeGui::ISmsComposeMode &QtUeGui::setComposeSmsMode() {
+  return activateMode(smsComposeMode);
+}
+
+IUeGui::ISmsComposeMode &QtUeGui::getSmsComposeMode() const {
+
+  return const_cast<ISmsComposeMode &>(
+      static_cast<const ISmsComposeMode &>(smsComposeMode));
 }
 
 IUeGui::IListViewMode &QtUeGui::setListViewMode() {
