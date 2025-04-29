@@ -16,6 +16,7 @@ namespace ue
         constexpr GuiViewMode VIEW_MODE_SMS_VIEW = 3;
         constexpr GuiViewMode VIEW_MODE_SMS_COMPOSE = 4;
         constexpr GuiViewMode VIEW_MODE_SMS_MENU = 5;
+        constexpr GuiViewMode VIEW_MODE_CALL_DIAL = 6;
     }
 
     class IEventsHandler : public IBtsEventsHandler,

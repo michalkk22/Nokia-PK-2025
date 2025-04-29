@@ -209,4 +209,21 @@ common::PhoneNumber UserPort::getSmsRecipient() const {
 std::string UserPort::getSmsText() const {
   return gui.getSmsComposeMode().getSmsText();
 }
+
+void UserPort::startDial() {
+  if (!handler)
+    return;
+
+  logger.logDebug("Green button clicked");
+
+  if (currentViewMode == details::VIEW_MODE_CALL_DIAL) {
+    // TODO:
+    logger.logInfo("Start dial view active - attempting to call");
+  } else {
+    logger.logDebug("Switching to start dial view");
+    currentViewMode = details::VIEW_MODE_CALL_DIAL;
+    gui.setDialMode();
+  }
+}
+
 } // namespace ue

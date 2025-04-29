@@ -32,7 +32,9 @@ namespace ue
         common::PhoneNumber getSmsRecipient() const override;
         std::string getSmsText() const override;
 
-    private:
+        void startDial() override;
+
+      private:
         void acceptCallback();
         void rejectCallback();
         void mailCallback();
