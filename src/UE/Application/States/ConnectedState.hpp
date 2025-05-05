@@ -14,8 +14,9 @@ public:
     void handleSmsSentResult(common::PhoneNumber to, bool success) override;
     void handleUiAction(std::optional<std::size_t> selectedIndex) override;
     void handleUiBack() override;
+    void handleUiAccept() override;
 
-private:
+  private:
     void showMainMenu();
 };
 

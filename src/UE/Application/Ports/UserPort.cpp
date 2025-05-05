@@ -200,6 +200,7 @@ void UserPort::acceptCallback() {
     return;
 
   logger.logDebug("acceptCallback() - Current UI mode: ", currentViewMode);
+  handler->handleUiAction(2);
 }
 
 void UserPort::rejectCallback() {
@@ -222,16 +223,8 @@ void UserPort::startDial() {
   if (!handler)
     return;
 
-  logger.logDebug("Green button clicked");
-
-  if (currentViewMode == details::VIEW_MODE_CALL_DIAL) {
-    // TODO:
-    logger.logInfo("Start dial view active - attempting to call");
-  } else {
-    logger.logDebug("Switching to start dial view");
-    currentViewMode = details::VIEW_MODE_CALL_DIAL;
-    gui.setDialMode();
-  }
+  logger.logDebug("Starting dial mode");
+  currentViewMode = details::VIEW_MODE_CALL_DIAL;
 }
 
 } // namespace ue

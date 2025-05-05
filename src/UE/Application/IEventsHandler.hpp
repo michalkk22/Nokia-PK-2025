@@ -27,6 +27,7 @@ namespace ue
         virtual ~IEventsHandler() = default;
         virtual void handleUiAction(std::optional<std::size_t> selectedIndex) = 0;
         virtual void handleUiBack() = 0;
+        virtual void handleUiAccept() = 0;
         virtual void handleSmsReceived(common::PhoneNumber from, std::string text) = 0;
         virtual void handleSmsSentResult(common::PhoneNumber to, bool success) = 0;
         virtual void handleSmsComposeResult(common::PhoneNumber recipient, const std::string& text) = 0;

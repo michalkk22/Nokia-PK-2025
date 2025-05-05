@@ -1,4 +1,5 @@
 #include "BaseState.hpp"
+#include "NotConnectedState.hpp"
 
 namespace ue {
 
@@ -24,13 +25,18 @@ void BaseState::handleAttachReject() {
 }
 
 void BaseState::handleDisconnected() {
-  logger.logError("Uexpected: handleDisconnected");
+  logger.logInfo("Lost connection to BTS.");
+  context.setState<NotConnectedState>();
 }
 
 void BaseState::handleSmsReceived(common::PhoneNumber fromNumber,
                                   std::string message) {
-  logger.logError("Uexpected: handleSmsReceived from: ", fromNumber,
-                  " text: ", message);
+  logger.logInfo("Received SMS from: ", fromNumber, " with content: ", message);
+
+  std::size_t smsIndex = context.smsDb.addReceivedSms(fromNumber, message);
+  logger.logDebug("Stored SMS at index: ", smsIndex);
+
+  context.user.showNewSms();
 }
 
 void BaseState::handleSmsSentResult(common::PhoneNumber to, bool success) {
@@ -52,5 +58,9 @@ void BaseState::handleUiAction(std::optional<std::size_t> selectedIndex) {
 }
 
 void BaseState::handleUiBack() { logger.logError("Unexpected: handleUiBack"); }
+
+void BaseState::handleUiAccept() {
+  logger.logError("Unexpected: handleUiAccept");
+}
 
 } // namespace ue

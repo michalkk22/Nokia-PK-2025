@@ -1,6 +1,7 @@
 #include "ConnectedState.hpp"
 #include "ComposeSmsState.hpp"
 #include "NotConnectedState.hpp"
+#include "StartDialState.hpp"
 #include "ViewSmsListState.hpp"
 #include <vector>
 
@@ -58,6 +59,11 @@ void ConnectedState::handleUiAction(std::optional<std::size_t> selectedIndex) {
 
 void ConnectedState::handleUiBack() {
   logger.logInfo("Back button pressed in main menu – no action taken");
+}
+
+void ConnectedState::handleUiAccept() {
+  logger.logInfo("Accept button pressed");
+  context.setState<StartDialState>();
 }
 
 void ConnectedState::handleSmsSentResult(common::PhoneNumber to, bool success) {
