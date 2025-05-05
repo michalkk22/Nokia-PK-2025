@@ -225,6 +225,7 @@ void UserPort::startDial() {
 
   logger.logDebug("Starting dial mode");
   currentViewMode = details::VIEW_MODE_CALL_DIAL;
+  gui.setDialMode();
 }
 
 } // namespace ue

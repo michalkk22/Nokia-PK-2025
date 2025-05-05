@@ -25,6 +25,11 @@ void Application::handleUiBack() {
     context.state->handleUiBack();
 }
 
+void Application::handleUiAccept() {
+  if (context.state)
+    context.state->handleUiAccept();
+}
+
 void Application::handleTimeout() {
   if (context.state)
     context.state->handleTimeout();

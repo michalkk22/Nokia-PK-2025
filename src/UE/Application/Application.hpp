@@ -27,6 +27,7 @@ namespace ue
         
         void handleUiAction(std::optional<std::size_t> selectedIndex) override;
         void handleUiBack() override;
+        void handleUiAccept() override;
         // ITimerEventsHandler interface
         void handleTimeout() override;
 
