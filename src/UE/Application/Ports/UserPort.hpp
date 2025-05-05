@@ -29,7 +29,7 @@ namespace ue
         void displayAlert(const std::string& title, const std::string& message);
         void showSmsCompose() override;
 
-        common::PhoneNumber getSmsRecipient() const override;
+                common::PhoneNumber getSmsRecipient() const override;
         std::string getSmsText() const override;
 
         void startDial() override;
@@ -38,6 +38,7 @@ namespace ue
         void acceptCallback();
         void rejectCallback();
         void mailCallback();
+        void itemSelectedCallback();
 
         common::PrefixedLogger logger;
         IUeGui& gui;
