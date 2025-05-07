@@ -3,6 +3,9 @@
 #include "ITimerPort.hpp"
 #include "Logger/PrefixedLogger.hpp"
 
+#include <atomic>
+#include <thread>
+
 namespace ue
 {
 
@@ -21,6 +24,8 @@ public:
 private:
     common::PrefixedLogger logger;
     ITimerEventsHandler* handler = nullptr;
+    std::unique_ptr<std::thread> timerThread;
+    std::atomic<bool> timerRunning{false};
 };
 
 }

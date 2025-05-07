@@ -6,13 +6,13 @@ namespace ue {
 
 class SendingCallState : public StartDialState {
 public:
-    SendingCallState(Context &context);
-    SendingCallState(Context &context, const std::string &name);
-    void handleUiBack() override;
-    void handleUiAccept() override;
+  SendingCallState(Context &context);
+  void handleUiBack() override;
+  void handleUiAccept() override;
+  void handleTimeout() override;
+  void handleCallUnknownRecipient(common::PhoneNumber to) override;
 
-  private:
-    void dialing();
+private:
 };
 
 } // namespace ue

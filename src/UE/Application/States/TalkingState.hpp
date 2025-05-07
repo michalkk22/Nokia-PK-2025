@@ -1,10 +1,9 @@
 #pragma once
 
-#include "SendingCallState.hpp"
+#include "ConnectedState.hpp"
 
 namespace ue {
-class TalkingState : public SendingCallState {
-    TalkingState(Context &context);
-     
+class TalkingState : public ConnectedState {
+  TalkingState(Context &context);
 };
 }

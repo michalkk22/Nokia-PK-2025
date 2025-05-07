@@ -2,5 +2,5 @@
 
 namespace ue {
 TalkingState::TalkingState(Context &context)
-    : SendingCallState(context, "TalkingState") {};
+    : ConnectedState(context, "TalkingState") {};
 }
