@@ -11,6 +11,9 @@ ConnectedState::ConnectedState(Context &context)
   showMainMenu();
 }
 
+ConnectedState::ConnectedState(Context &context, const std::string &name)
+    : BaseState(context, name) {}
+
 void ConnectedState::showMainMenu() {
   logger.logInfo("Entered Connected state.");
   context.user.showConnected();

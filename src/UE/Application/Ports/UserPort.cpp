@@ -200,7 +200,7 @@ void UserPort::acceptCallback() {
     return;
 
   logger.logDebug("acceptCallback() - Current UI mode: ", currentViewMode);
-  handler->handleUiAction(2);
+  handler->handleUiAccept();
 }
 
 void UserPort::rejectCallback() {
@@ -226,6 +226,10 @@ void UserPort::startDial() {
   logger.logDebug("Starting dial mode");
   currentViewMode = details::VIEW_MODE_CALL_DIAL;
   gui.setDialMode();
+}
+
+common::PhoneNumber UserPort::getDialRecipient() const {
+  return gui.setDialMode().getPhoneNumber();
 }
 
 } // namespace ue

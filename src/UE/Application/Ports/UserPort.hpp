@@ -1,14 +1,15 @@
 #pragma once
 
+#include "IEventsHandler.hpp"
+#include "IUeGui.hpp"
 #include "IUserPort.hpp"
 #include "Logger/PrefixedLogger.hpp"
-#include "IUeGui.hpp"
 #include "Messages/PhoneNumber.hpp"
-#include "IEventsHandler.hpp"
-#include "UeGui/ISmsComposeMode.hpp" 
 #include "SmsDb.hpp"
-#include <vector>
+#include "UeGui/IDialMode.hpp"
+#include "UeGui/ISmsComposeMode.hpp"
 #include <optional>
+#include <vector>
 
 namespace ue
 {
@@ -29,10 +30,11 @@ namespace ue
         void displayAlert(const std::string& title, const std::string& message);
         void showSmsCompose() override;
 
-                common::PhoneNumber getSmsRecipient() const override;
+        common::PhoneNumber getSmsRecipient() const override;
         std::string getSmsText() const override;
 
         void startDial() override;
+        common::PhoneNumber getDialRecipient() const override;
 
       private:
         void acceptCallback();

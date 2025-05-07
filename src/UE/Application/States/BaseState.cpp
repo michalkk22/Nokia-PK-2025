@@ -25,18 +25,12 @@ void BaseState::handleAttachReject() {
 }
 
 void BaseState::handleDisconnected() {
-  logger.logInfo("Lost connection to BTS.");
-  context.setState<NotConnectedState>();
+  logger.logError("Uexpected: handleDisconnected");
 }
 
 void BaseState::handleSmsReceived(common::PhoneNumber fromNumber,
                                   std::string message) {
-  logger.logInfo("Received SMS from: ", fromNumber, " with content: ", message);
-
-  std::size_t smsIndex = context.smsDb.addReceivedSms(fromNumber, message);
-  logger.logDebug("Stored SMS at index: ", smsIndex);
-
-  context.user.showNewSms();
+  logger.logError("Unexpected: handleSmsReceived");
 }
 
 void BaseState::handleSmsSentResult(common::PhoneNumber to, bool success) {

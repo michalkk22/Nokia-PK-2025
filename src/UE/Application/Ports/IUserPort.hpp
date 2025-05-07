@@ -34,6 +34,7 @@ public:
 
     // Calls
     virtual void startDial() = 0;
+    virtual common::PhoneNumber getDialRecipient() const = 0;
 };
 
 }
