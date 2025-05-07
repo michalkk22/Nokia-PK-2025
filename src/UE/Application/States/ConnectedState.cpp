@@ -1,6 +1,7 @@
 #include "ConnectedState.hpp"
 #include "ComposeSmsState.hpp"
 #include "NotConnectedState.hpp"
+#include "StartDialState.hpp"
 #include "ViewSmsListState.hpp"
 #include <vector>
 
@@ -57,7 +58,13 @@ void ConnectedState::handleUiAction(std::optional<std::size_t> selectedIndex) {
 }
 
 void ConnectedState::handleUiBack() {
-  logger.logInfo("Back button pressed in main menu – no action taken");
+  logger.logInfo("Back button pressed.");
+  context.setState<ConnectedState>();
+}
+
+void ConnectedState::handleUiAccept() {
+  logger.logInfo("Accept button pressed.");
+  context.setState<StartDialState>();
 }
 
 void ConnectedState::handleSmsSentResult(common::PhoneNumber to, bool success) {
@@ -70,6 +77,11 @@ void ConnectedState::handleSmsSentResult(common::PhoneNumber to, bool success) {
     context.user.displayAlert("SMS Failed",
                               "Could not send SMS to " + common::to_string(to));
   }
+}
+
+void ConnectedState::handleCallUnknownRecipient(common::PhoneNumber to) {
+  context.user.displayAlert("Call Failed",
+                            "Could not call " + common::to_string(to));
 }
 
 } // namespace ue

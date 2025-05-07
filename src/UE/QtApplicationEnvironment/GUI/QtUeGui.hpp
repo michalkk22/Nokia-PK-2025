@@ -44,7 +44,8 @@ namespace ue
         void setAcceptCallback(Callback) override;
         void setRejectCallback(Callback) override;
         void setMailCallback(Callback) override;
-        void setTitle(const std::string& title) override;
+        void setItemSelectedCallback(Callback callback);
+        void setTitle(const std::string &title) override;
         void showConnected() override;
         void showConnecting() override;
         void showNotConnected() override;
@@ -77,6 +78,7 @@ namespace ue
         IUeGui::Callback rejectCallback;
         IUeGui::Callback homeCallback;
         IUeGui::Callback mailCallback;
+        IUeGui::Callback itemSelectedCallback;
 
         void initGUI();
         void initInternalSignals();

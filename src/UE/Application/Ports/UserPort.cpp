@@ -15,6 +15,7 @@ void UserPort::start(IEventsHandler &handler) {
   gui.setAcceptCallback(std::bind(&UserPort::acceptCallback, this));
   gui.setRejectCallback(std::bind(&UserPort::rejectCallback, this));
   gui.setMailCallback(std::bind(&UserPort::mailCallback, this));
+  gui.setItemSelectedCallback(std::bind(&UserPort::itemSelectedCallback, this));
 }
 
 void UserPort::stop() {
@@ -22,6 +23,7 @@ void UserPort::stop() {
   gui.setAcceptCallback(nullptr);
   gui.setRejectCallback(nullptr);
   gui.setMailCallback(nullptr);
+  gui.setItemSelectedCallback(nullptr);
 }
 
 void UserPort::showNotConnected() {
@@ -36,7 +38,7 @@ void UserPort::showConnecting() {
 
 void UserPort::showConnected() {
   currentViewMode = details::VIEW_MODE_MAIN_MENU;
-  logger.logInfo("Menu");
+  logger.logInfo("Main view");
   IUeGui::IListViewMode &menu = gui.setListViewMode();
   menu.clearSelectionList();
   gui.showConnected();
@@ -45,6 +47,8 @@ void UserPort::showConnected() {
 void UserPort::mailCallback() {
   if (!handler)
     return;
+
+  logger.logDebug("mailCallback() - Current UI state: ", currentViewMode);
 
   logger.logDebug("Mail button clicked - initiating SMS functionality");
 
@@ -144,10 +148,7 @@ void UserPort::showSmsCompose() {
   composeMode.setPhoneNumber(common::PhoneNumber{});
 }
 
-void UserPort::acceptCallback() {
-  if (!handler)
-    return;
-
+void UserPort::itemSelectedCallback() {
   std::optional<std::size_t> selectedIndexOpt;
 
   if (currentViewMode == details::VIEW_MODE_MAIN_MENU) {
@@ -194,6 +195,14 @@ void UserPort::acceptCallback() {
   handler->handleUiAction(selectedIndexOpt);
 }
 
+void UserPort::acceptCallback() {
+  if (!handler)
+    return;
+
+  logger.logDebug("acceptCallback() - Current UI mode: ", currentViewMode);
+  handler->handleUiAccept();
+}
+
 void UserPort::rejectCallback() {
   if (!handler)
     return;
@@ -209,4 +218,18 @@ common::PhoneNumber UserPort::getSmsRecipient() const {
 std::string UserPort::getSmsText() const {
   return gui.getSmsComposeMode().getSmsText();
 }
+
+void UserPort::startDial() {
+  if (!handler)
+    return;
+
+  logger.logDebug("Starting dial mode");
+  currentViewMode = details::VIEW_MODE_CALL_DIAL;
+  gui.setDialMode();
+}
+
+common::PhoneNumber UserPort::getDialRecipient() const {
+  return gui.setDialMode().getPhoneNumber();
+}
+
 } // namespace ue

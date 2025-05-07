@@ -16,6 +16,9 @@ set(APPLICATION_SOURCES
     States/ViewSmsListState.cpp     
     States/ViewSmsState.cpp  
     States/ComposeSmsState.cpp 
+    States/StartDialState.cpp
+    States/SendingCallState.cpp
+    States/TalkingState.cpp
 )
 
 add_library(${PROJECT_NAME} ${APPLICATION_SOURCES})

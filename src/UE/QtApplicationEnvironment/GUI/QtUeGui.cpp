@@ -138,26 +138,37 @@ void QtUeGui::initModes() {
 }
 
 void QtUeGui::onAcceptClicked() {
+  logger.logDebug("GUI: acceptClicked()");
   if (acceptCallback) {
     acceptCallback();
   }
 }
 
 void QtUeGui::onRejectClicked() {
+  logger.logDebug("GUI: rejectClicked()");
   if (rejectCallback) {
     rejectCallback();
   }
 }
 
 void QtUeGui::onHomeClicked() {
+  logger.logDebug("GUI: homeClicked()");
   if (mailCallback) {
     mailCallback();
   }
 }
 
-void QtUeGui::onItemSelected() { onAcceptClicked(); }
+void QtUeGui::onItemSelected() {
+  logger.logDebug("GUI: itemSelected()");
+  if (itemSelectedCallback) {
+    itemSelectedCallback();
+  }
+}
 
-void QtUeGui::onTextEntered() { onAcceptClicked(); }
+void QtUeGui::onTextEntered() {
+  logger.logDebug("GUI: textEntered()");
+  onAcceptClicked();
+}
 
 void QtUeGui::setCloseGuard(CloseGuard closeGuard) {
   mainWindow.setCloseGuard(std::move(closeGuard));
@@ -172,6 +183,10 @@ void QtUeGui::setRejectCallback(Callback callback) {
 }
 
 void QtUeGui::setMailCallback(Callback callback) { mailCallback = callback; }
+
+void QtUeGui::setItemSelectedCallback(Callback callback) {
+  itemSelectedCallback = callback;
+}
 
 void QtUeGui::setTitle(const std::string &title) {
   mainWindow.setWindowTitle(QString::fromStdString(title));

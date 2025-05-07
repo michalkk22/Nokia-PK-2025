@@ -1,4 +1,5 @@
 #include "BaseState.hpp"
+#include "NotConnectedState.hpp"
 
 namespace ue {
 
@@ -29,8 +30,7 @@ void BaseState::handleDisconnected() {
 
 void BaseState::handleSmsReceived(common::PhoneNumber fromNumber,
                                   std::string message) {
-  logger.logError("Uexpected: handleSmsReceived from: ", fromNumber,
-                  " text: ", message);
+  logger.logError("Unexpected: handleSmsReceived");
 }
 
 void BaseState::handleSmsSentResult(common::PhoneNumber to, bool success) {
@@ -52,5 +52,21 @@ void BaseState::handleUiAction(std::optional<std::size_t> selectedIndex) {
 }
 
 void BaseState::handleUiBack() { logger.logError("Unexpected: handleUiBack"); }
+
+void BaseState::handleUiAccept() {
+  logger.logError("Unexpected: handleUiAccept");
+}
+
+void BaseState::handleCallUnknownRecipient(common::PhoneNumber to) {
+  logger.logError("Unexpected: handleCallUnknownRecipient for: ", to);
+}
+
+void BaseState::handleCallAccepted() {
+  logger.logError("Unexpected: handleCallAccepted");
+}
+
+void BaseState::handleCallDropped() {
+  logger.logError("Unexpected: handleCallDropped");
+}
 
 } // namespace ue

@@ -25,6 +25,11 @@ void Application::handleUiBack() {
     context.state->handleUiBack();
 }
 
+void Application::handleUiAccept() {
+  if (context.state)
+    context.state->handleUiAccept();
+}
+
 void Application::handleTimeout() {
   if (context.state)
     context.state->handleTimeout();
@@ -73,4 +78,21 @@ void Application::handleSmsComposeResult(common::PhoneNumber recipient,
   context.setState<ConnectedState>();
 }
 
+void Application::handleCallUnknownRecipient(common::PhoneNumber to) {
+  logger.logInfo("Call to unknown recipient: ", to);
+  if (context.state)
+    context.state->handleCallUnknownRecipient(to);
+}
+
+void Application::handleCallAccepted() {
+  logger.logInfo("Call accepted");
+  if (context.state)
+    context.state->handleCallAccepted();
+}
+
+void Application::handleCallDropped() {
+  logger.logInfo("Call dropped");
+  if (context.state)
+    context.state->handleCallDropped();
+}
 } // namespace ue
