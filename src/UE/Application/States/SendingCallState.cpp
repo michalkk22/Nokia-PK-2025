@@ -49,4 +49,4 @@ void SendingCallState::handleCallDropped() {
   context.setState<ConnectedState>();
   context.user.displayAlert("", "Call dropped");
 }
-}
+} // namespace ue
