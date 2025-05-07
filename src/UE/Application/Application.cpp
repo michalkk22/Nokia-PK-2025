@@ -78,4 +78,10 @@ void Application::handleSmsComposeResult(common::PhoneNumber recipient,
   context.setState<ConnectedState>();
 }
 
+void Application::handleCallUnknownRecipient(common::PhoneNumber to) {
+  logger.logInfo("Call to unknown recipient: ", to);
+  if (context.state)
+    context.state->handleCallUnknownRecipient(to);
+}
+
 } // namespace ue

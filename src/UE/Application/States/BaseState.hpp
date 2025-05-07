@@ -28,6 +28,7 @@ public:
     void handleUiAction(std::optional<std::size_t> selectedIndex) override;
     void handleUiBack() override;
     void handleUiAccept() override;
+    void handleCallUnknownRecipient(common::PhoneNumber to) override;
 
   protected:
     Context& context;

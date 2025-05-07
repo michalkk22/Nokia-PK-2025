@@ -24,6 +24,9 @@ void BtsPort::stop() {
 
 void BtsPort::handleMessage(BinaryMessage msg) {
   try {
+    if (!handler) {
+      return;
+    }
     common::IncomingMessage reader{msg};
     auto msgId = reader.readMessageId();
     auto fromNumber = reader.readPhoneNumber();
@@ -45,8 +48,7 @@ void BtsPort::handleMessage(BinaryMessage msg) {
     }
     case common::MessageId::Sms: {
       std::string message = reader.readRemainingText();
-      if (handler)
-        handler->handleSmsReceived(fromNumber, message);
+      handler->handleSmsReceived(fromNumber, message);
       break;
     }
     case common::MessageId::UnknownRecipient: {
@@ -55,12 +57,12 @@ void BtsPort::handleMessage(BinaryMessage msg) {
       case common::MessageId::Sms:
         logger.logError("Failed to send SMS – Recipient not found.",
                         messageHeader.to);
-        if (handler)
-          handler->handleSmsSentResult(messageHeader.to, false);
-                        break;
+        handler->handleSmsSentResult(messageHeader.to, false);
+        break;
       case common::MessageId::CallRequest:
         logger.logError("Failed to send call request – Recipient not found.",
                         messageHeader.to);
+        handler->handleCallUnknownRecipient(messageHeader.to);
         break;
       default:
         logger.logError("Failed to send message – Recipient not found.",

@@ -79,4 +79,9 @@ void ConnectedState::handleSmsSentResult(common::PhoneNumber to, bool success) {
   }
 }
 
+void ConnectedState::handleCallUnknownRecipient(common::PhoneNumber to) {
+  context.user.displayAlert("Call Failed",
+                            "Could not call " + common::to_string(to));
+}
+
 } // namespace ue
