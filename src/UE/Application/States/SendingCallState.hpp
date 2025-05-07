@@ -11,6 +11,8 @@ public:
   void handleUiAccept() override;
   void handleTimeout() override;
   void handleCallUnknownRecipient(common::PhoneNumber to) override;
+  void handleCallAccepted() override;
+  void handleCallDropped() override;
 
 private:
 };

@@ -29,6 +29,8 @@ public:
     void handleUiBack() override;
     void handleUiAccept() override;
     void handleCallUnknownRecipient(common::PhoneNumber to) override;
+    void handleCallAccepted() override;
+    void handleCallDropped() override;
 
   protected:
     Context& context;

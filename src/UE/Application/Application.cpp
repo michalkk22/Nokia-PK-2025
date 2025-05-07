@@ -84,4 +84,15 @@ void Application::handleCallUnknownRecipient(common::PhoneNumber to) {
     context.state->handleCallUnknownRecipient(to);
 }
 
+void Application::handleCallAccepted() {
+  logger.logInfo("Call accepted");
+  if (context.state)
+    context.state->handleCallAccepted();
+}
+
+void Application::handleCallDropped() {
+  logger.logInfo("Call dropped");
+  if (context.state)
+    context.state->handleCallDropped();
+
 } // namespace ue

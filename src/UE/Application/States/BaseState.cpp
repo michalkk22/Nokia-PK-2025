@@ -61,4 +61,12 @@ void BaseState::handleCallUnknownRecipient(common::PhoneNumber to) {
   logger.logError("Unexpected: handleCallUnknownRecipient for: ", to);
 }
 
+void BaseState::handleCallAccepted() {
+  logger.logError("Unexpected: handleCallAccepted");
+}
+
+void BaseState::handleCallDropped() {
+  logger.logError("Unexpected: handleCallDropped");
+}
+
 } // namespace ue

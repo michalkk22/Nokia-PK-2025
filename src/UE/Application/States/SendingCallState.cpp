@@ -1,4 +1,5 @@
 #include "SendingCallState.hpp"
+#include "TalkingState.hpp"
 
 namespace ue {
 SendingCallState::SendingCallState(Context &context)
@@ -34,5 +35,18 @@ void SendingCallState::handleCallUnknownRecipient(common::PhoneNumber to) {
 
 void SendingCallState::handleUiAccept() {
   logger.logInfo("User pressed accept - no action taken.");
+}
+
+void SendingCallState::handleCallAccepted() {
+  logger.logInfo("Call accepted - switching to talking state.");
+  context.timer.stopTimer();
+  context.setState<TalkingState>();
+}
+
+void SendingCallState::handleCallDropped() {
+  logger.logInfo("Call dropped - returning to main menu.");
+  context.timer.stopTimer();
+  context.setState<ConnectedState>();
+  context.user.displayAlert("", "Call dropped");
 }
 }

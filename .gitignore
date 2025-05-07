@@ -15,3 +15,4 @@ _deps
 *_autogen
 
 .vscode
+googletest/googletest/generated

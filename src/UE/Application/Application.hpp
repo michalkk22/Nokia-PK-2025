@@ -40,6 +40,8 @@ namespace ue
         void handleSmsSentResult(common::PhoneNumber to, bool success) override;
         void handleSmsComposeResult(common::PhoneNumber recipient, const std::string& text) override;
         void handleCallUnknownRecipient(common::PhoneNumber to) override;
+        void handleCallAccepted() override;
+        void handleCallDropped() override;
 
       private:
         Context context;
