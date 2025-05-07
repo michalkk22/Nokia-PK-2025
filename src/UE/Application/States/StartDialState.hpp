@@ -7,7 +7,7 @@ namespace ue {
 class StartDialState : public ConnectedState {
 public:
   StartDialState(Context &context);
-  void handleUiBack() override;
+  StartDialState(Context &context, const std::string &name);
   void handleUiAction(std::optional<std::size_t> selectedIndex) override;
   void handleUiAccept() override;
 

@@ -85,4 +85,10 @@ void BtsPort::sendSms(common::PhoneNumber to, const std::string &text) {
   transport.sendMessage(msg.getMessage());
 }
 
+void BtsPort::sendCallRequest(common::PhoneNumber to) {
+  logger.logInfo("Sending call request to: ", to);
+  common::OutgoingMessage msg{common::MessageId::CallRequest, phoneNumber, to};
+  transport.sendMessage(msg.getMessage());
+}
+
 } // namespace ue

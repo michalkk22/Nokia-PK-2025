@@ -9,7 +9,8 @@ class ConnectedState : public BaseState
 {
 public:
     ConnectedState(Context& context);
-    ConnectedState(Context &context, const std::string &name);
+    ConnectedState(Context &context, const std::string &name)
+        : BaseState(context, name) {};
     void handleDisconnected() override;
     void handleSmsReceived(common::PhoneNumber fromNumber, std::string message) override;
     void handleSmsSentResult(common::PhoneNumber to, bool success) override;

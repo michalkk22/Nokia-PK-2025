@@ -1,16 +1,18 @@
 #pragma once
 
-#include "ConnectedState.hpp"
+#include "StartDialState.hpp"
 
 namespace ue {
 
-class SendingCallState : public ConnectedState {
+class SendingCallState : public StartDialState {
 public:
     SendingCallState(Context &context);
-  void handleUiBack() override;
+    SendingCallState(Context &context, const std::string &name);
+    void handleUiBack() override;
+    void handleUiAccept() override;
 
-private:
-  void dialing();
+  private:
+    void dialing();
 };
 
 } // namespace ue

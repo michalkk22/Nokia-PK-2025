@@ -11,9 +11,6 @@ ConnectedState::ConnectedState(Context &context)
   showMainMenu();
 }
 
-ConnectedState::ConnectedState(Context &context, const std::string &name)
-    : BaseState(context, name) {}
-
 void ConnectedState::showMainMenu() {
   logger.logInfo("Entered Connected state.");
   context.user.showConnected();
@@ -61,11 +58,12 @@ void ConnectedState::handleUiAction(std::optional<std::size_t> selectedIndex) {
 }
 
 void ConnectedState::handleUiBack() {
-  logger.logInfo("Back button pressed in main menu – no action taken");
+  logger.logInfo("Back button pressed.");
+  context.setState<ConnectedState>();
 }
 
 void ConnectedState::handleUiAccept() {
-  logger.logInfo("Accept button pressed");
+  logger.logInfo("Accept button pressed.");
   context.setState<StartDialState>();
 }
 

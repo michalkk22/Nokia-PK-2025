@@ -1,5 +1,6 @@
 #include "StartDialState.hpp"
 #include "ConnectedState.hpp"
+#include "SendingCallState.hpp"
 
 namespace ue {
 StartDialState::StartDialState(Context &context)
@@ -7,25 +8,21 @@ StartDialState::StartDialState(Context &context)
   startDial();
 }
 
+StartDialState::StartDialState(Context &context, const std::string &name)
+    : ConnectedState(context, name) {}
+
 void StartDialState::startDial() {
   logger.logInfo("Entered StartDial state.");
   context.user.startDial();
 }
 
 void StartDialState::handleUiAction(std::optional<std::size_t> selectedIndex) {
-  logger.logInfo(
-      "Message button pressed in StartDial state - no action taken.");
-}
-
-void StartDialState::handleUiBack() {
-  logger.logInfo(
-      "User pressed back in StartDial state, returning to main menu.");
-  context.setState<ConnectedState>();
+  logger.logInfo("User pressed message - no action taken.");
 }
 
 void StartDialState::handleUiAccept() {
   logger.logInfo(
-      "User pressed accept in StartDial state, trying to send call request.");
+      "User pressed accept in StartDial state - trying to send call request.");
 
   auto recipient = context.user.getDialRecipient();
 
@@ -35,9 +32,8 @@ void StartDialState::handleUiAccept() {
     return;
   }
 
-  logger.logInfo("Sending call request to ", common::to_string(recipient));
+  context.bts.sendCallRequest(recipient);
+  logger.logInfo("Call request sent to: ", recipient);
+  context.setState<SendingCallState>();
 }
-
-// TODO: receiving call request cancels sending call request
-
 } // namespace ue
