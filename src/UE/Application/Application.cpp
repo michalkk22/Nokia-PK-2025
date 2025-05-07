@@ -94,5 +94,5 @@ void Application::handleCallDropped() {
   logger.logInfo("Call dropped");
   if (context.state)
     context.state->handleCallDropped();
-
+}
 } // namespace ue
