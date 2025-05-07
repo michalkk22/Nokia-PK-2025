@@ -4,6 +4,7 @@
 
 namespace ue {
 class TalkingState : public ConnectedState {
+public:
   TalkingState(Context &context);
 };
 }
