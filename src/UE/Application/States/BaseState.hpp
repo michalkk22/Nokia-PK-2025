@@ -27,7 +27,12 @@ public:
     void handleSmsComposeResult(common::PhoneNumber recipient, const std::string& text) override;
     void handleUiAction(std::optional<std::size_t> selectedIndex) override;
     void handleUiBack() override;
-protected:
+    void handleUiAccept() override;
+    void handleCallUnknownRecipient(common::PhoneNumber to) override;
+    void handleCallAccepted() override;
+    void handleCallDropped() override;
+
+  protected:
     Context& context;
     common::PrefixedLogger logger;
 };

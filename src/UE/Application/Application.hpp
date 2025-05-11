@@ -27,6 +27,7 @@ namespace ue
         
         void handleUiAction(std::optional<std::size_t> selectedIndex) override;
         void handleUiBack() override;
+        void handleUiAccept() override;
         // ITimerEventsHandler interface
         void handleTimeout() override;
 
@@ -38,8 +39,11 @@ namespace ue
         void handleSmsReceived(common::PhoneNumber fromNumber, std::string message) override;
         void handleSmsSentResult(common::PhoneNumber to, bool success) override;
         void handleSmsComposeResult(common::PhoneNumber recipient, const std::string& text) override;
+        void handleCallUnknownRecipient(common::PhoneNumber to) override;
+        void handleCallAccepted() override;
+        void handleCallDropped() override;
 
-    private:
+      private:
         Context context;
         common::PrefixedLogger logger;
 

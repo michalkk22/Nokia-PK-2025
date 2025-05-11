@@ -24,10 +24,13 @@ void BtsPort::stop() {
 
 void BtsPort::handleMessage(BinaryMessage msg) {
   try {
+    if (!handler) {
+      return;
+    }
     common::IncomingMessage reader{msg};
     auto msgId = reader.readMessageId();
-    auto fromNumber = reader.readPhoneNumber();
-    auto to = reader.readPhoneNumber();
+    auto phoneNumber = reader.readPhoneNumber();
+    common::MessageHeader messageHeader;
 
     switch (msgId) {
     case common::MessageId::Sib: {
@@ -45,20 +48,39 @@ void BtsPort::handleMessage(BinaryMessage msg) {
     }
     case common::MessageId::Sms: {
       std::string message = reader.readRemainingText();
-      if (handler)
-        handler->handleSmsReceived(fromNumber, message);
+      handler->handleSmsReceived(phoneNumber, message);
       break;
     }
     case common::MessageId::UnknownRecipient: {
-      auto originalRecipient = reader.readPhoneNumber();
-      logger.logError("Failed to send SMS – Recipient not found.",
-                      originalRecipient);
-      if (handler)
-        handler->handleSmsSentResult(originalRecipient, false);
+      messageHeader = reader.readMessageHeader();
+      switch (messageHeader.messageId) {
+      case common::MessageId::Sms:
+        logger.logError("Failed to send SMS – Recipient not found.",
+                        messageHeader.to);
+        handler->handleSmsSentResult(messageHeader.to, false);
+        break;
+      case common::MessageId::CallRequest:
+        logger.logError("Failed to send call request – Recipient not found.",
+                        messageHeader.to);
+        handler->handleCallUnknownRecipient(messageHeader.to);
+        break;
+      default:
+        logger.logError("Failed to send message – Recipient not found.",
+                        messageHeader.to);
+        break;
+        break;
+      }
+    case common::MessageId::CallDropped:
+      logger.logInfo("Call dropped");
+      handler->handleCallDropped();
+      break;
+    case common::MessageId::CallAccepted:
+      logger.logInfo("Call accepted");
+      handler->handleCallAccepted();
       break;
     }
     default:
-      logger.logError("unknown message: ", msgId, ", from: ", fromNumber);
+      logger.logError("unknown message: ", msgId, ", from: ", phoneNumber);
     }
   } catch (std::exception const &ex) {
     logger.logError("handleMessage error: ", ex.what());
@@ -82,6 +104,12 @@ void BtsPort::sendSms(common::PhoneNumber to, const std::string &text) {
   logger.logInfo("Sending SMS to: ", to);
   common::OutgoingMessage msg{common::MessageId::Sms, phoneNumber, to};
   msg.writeText(text);
+  transport.sendMessage(msg.getMessage());
+}
+
+void BtsPort::sendCallRequest(common::PhoneNumber to) {
+  logger.logInfo("Sending call request to: ", to);
+  common::OutgoingMessage msg{common::MessageId::CallRequest, phoneNumber, to};
   transport.sendMessage(msg.getMessage());
 }
 
