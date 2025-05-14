@@ -15,13 +15,12 @@ void ReceivingCallState::handleUiAccept() {
   logger.logInfo(
       "User pressed accept in ReceivingCall state - trying to accept call.");
   context.bts.sendCallAccepted(fromNumber);
-  context.setState<TalkingState>();
+  context.setState<TalkingState>(fromNumber);
 }
 
 void ReceivingCallState::handleUiBack() {
   logger.logInfo("User rejected call - returning to main menu.");
-  // TODO: drop call
-  //  context.bts.sendCallDropped();
+  context.bts.sendCallDropped(fromNumber);
   context.setState<ConnectedState>();
 }
 
