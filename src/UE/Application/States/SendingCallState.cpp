@@ -41,7 +41,7 @@ void SendingCallState::handleUiAccept() {
 void SendingCallState::handleCallAccepted() {
   logger.logInfo("Call accepted - switching to talking state.");
   context.timer.stopTimer();
-  context.setState<TalkingState>();
+  context.setState<TalkingState>(recipient);
 }
 
 void SendingCallState::handleCallDropped() {
