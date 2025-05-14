@@ -31,6 +31,7 @@ public:
     void handleCallUnknownRecipient(common::PhoneNumber to) override;
     void handleCallAccepted() override;
     void handleCallDropped() override;
+    void handleCallReceived(common::PhoneNumber fromNumber) override;
 
   protected:
     Context& context;

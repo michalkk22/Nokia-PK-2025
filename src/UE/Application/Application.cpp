@@ -95,4 +95,11 @@ void Application::handleCallDropped() {
   if (context.state)
     context.state->handleCallDropped();
 }
+
+void Application::handleCallReceived(common::PhoneNumber fromNumber) {
+  logger.logInfo("Call received from: ", fromNumber);
+  if (context.state)
+    context.state->handleCallReceived(fromNumber);
+}
+
 } // namespace ue

@@ -69,4 +69,8 @@ void BaseState::handleCallDropped() {
   logger.logError("Unexpected: handleCallDropped");
 }
 
+void BaseState::handleCallReceived(common::PhoneNumber fromNumber) {
+  logger.logError("Unexpected: handleCallReceived from: ", fromNumber);
+}
+
 } // namespace ue

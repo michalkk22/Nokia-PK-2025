@@ -49,4 +49,8 @@ void SendingCallState::handleCallDropped() {
   context.setState<ConnectedState>();
   context.user.displayAlert("", "Call dropped");
 }
+
+void SendingCallState::handleCallReceived(common::PhoneNumber fromNumber) {
+  dropAnotherCall(fromNumber);
+}
 } // namespace ue

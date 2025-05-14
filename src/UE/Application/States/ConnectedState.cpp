@@ -1,6 +1,7 @@
 #include "ConnectedState.hpp"
 #include "ComposeSmsState.hpp"
 #include "NotConnectedState.hpp"
+#include "ReceivingCallState.hpp"
 #include "StartDialState.hpp"
 #include "ViewSmsListState.hpp"
 #include <vector>
@@ -82,6 +83,18 @@ void ConnectedState::handleSmsSentResult(common::PhoneNumber to, bool success) {
 void ConnectedState::handleCallUnknownRecipient(common::PhoneNumber to) {
   context.user.displayAlert("Call Failed",
                             "Could not call " + common::to_string(to));
+}
+
+void ConnectedState::handleCallReceived(common::PhoneNumber fromNumber) {
+  logger.logInfo("Call received from: ", fromNumber);
+  context.setState<ReceivingCallState>(fromNumber);
+  context.user.displayAlert("Incoming Call",
+                            "from " + common::to_string(fromNumber));
+}
+
+void ConnectedState::dropAnotherCall(common::PhoneNumber fromNumber) {
+  logger.logInfo("Dropping another call received from: ", fromNumber);
+  // TODO: drop call
 }
 
 } // namespace ue
