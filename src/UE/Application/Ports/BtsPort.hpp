@@ -19,6 +19,7 @@ namespace ue
         void sendSms(common::PhoneNumber to, const std::string& text) override;
         void sendCallRequest(common::PhoneNumber to) override;
         void sendCallAccepted(common::PhoneNumber to) override;
+        void sendCallDropped(common::PhoneNumber to) override;
 
       private:
         void handleMessage(common::BinaryMessage msg);
