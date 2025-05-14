@@ -6,6 +6,7 @@ SendingCallState::SendingCallState(Context &context,
                                    common::PhoneNumber recipient)
     : StartDialState(context, "SendingCallState"), recipient(recipient) {
 
+  context.bts.sendCallRequest(recipient);
   logger.logInfo("Entered SendingCall state.");
   context.timer.startTimer(std::chrono::seconds{60});
   context.user.displayAlert("Calling", "Waiting for response...");

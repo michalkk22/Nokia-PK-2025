@@ -32,7 +32,6 @@ void StartDialState::handleUiAccept() {
     return;
   }
 
-  context.bts.sendCallRequest(recipient);
   logger.logInfo("Call request sent to: ", recipient);
   context.setState<SendingCallState>(recipient);
 }

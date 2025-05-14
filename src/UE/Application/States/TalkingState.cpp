@@ -4,6 +4,7 @@ namespace ue {
 TalkingState::TalkingState(Context &context, common::PhoneNumber recipient)
     : ConnectedState(context, "TalkingState"), recipient(recipient) {
         logger.logInfo("Entered Talking state.");
+        context.user.startDial();
     };
 
 void TalkingState::handleUiBack() {

@@ -94,7 +94,7 @@ void ConnectedState::handleCallReceived(common::PhoneNumber fromNumber) {
 
 void ConnectedState::dropAnotherCall(common::PhoneNumber fromNumber) {
   logger.logInfo("Dropping another call received from: ", fromNumber);
-  // TODO: drop call
+  context.bts.sendCallDropped(fromNumber);
 }
 
 } // namespace ue
