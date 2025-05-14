@@ -34,6 +34,6 @@ void StartDialState::handleUiAccept() {
 
   context.bts.sendCallRequest(recipient);
   logger.logInfo("Call request sent to: ", recipient);
-  context.setState<SendingCallState>();
+  context.setState<SendingCallState>(recipient);
 }
 } // namespace ue

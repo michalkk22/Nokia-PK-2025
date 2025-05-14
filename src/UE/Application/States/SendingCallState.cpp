@@ -2,8 +2,9 @@
 #include "TalkingState.hpp"
 
 namespace ue {
-SendingCallState::SendingCallState(Context &context)
-    : StartDialState(context, "SendingCallState") {
+SendingCallState::SendingCallState(Context &context,
+                                   common::PhoneNumber recipient)
+    : StartDialState(context, "SendingCallState"), recipient(recipient) {
 
   logger.logInfo("Entered SendingCall state.");
   context.timer.startTimer(std::chrono::seconds{60});
@@ -12,8 +13,8 @@ SendingCallState::SendingCallState(Context &context)
 
 void SendingCallState::handleTimeout() {
   logger.logInfo("Call attempt timed out!");
+  context.bts.sendCallDropped(recipient);
   context.timer.stopTimer();
-  // TODO: drop call
   context.setState<ConnectedState>();
   context.user.displayAlert("", "Call attempt timed out");
 }
@@ -21,7 +22,7 @@ void SendingCallState::handleTimeout() {
 void SendingCallState::handleUiBack() {
   logger.logInfo(
       "User pressed back - droping call and returning to main menu.");
-  // TODO: drop call
+  context.bts.sendCallDropped(recipient);
   context.timer.stopTimer();
   context.setState<ConnectedState>();
 }

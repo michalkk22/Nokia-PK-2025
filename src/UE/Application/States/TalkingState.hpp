@@ -5,6 +5,11 @@
 namespace ue {
 class TalkingState : public ConnectedState {
 public:
-  TalkingState(Context &context);
+  TalkingState(Context &context, common::PhoneNumber recipient);
+
+  void handleUiBack() override;
+
+private:
+  common::PhoneNumber recipient;
 };
 }
