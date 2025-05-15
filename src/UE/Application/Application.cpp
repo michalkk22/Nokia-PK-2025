@@ -15,9 +15,9 @@ Application::Application(common::PhoneNumber phoneNumber,
 
 Application::~Application() { logger.logInfo("Stopped"); }
 
-void Application::handleUiAction(std::optional<std::size_t> selectedIndex) {
+void Application::handleUiAction() {
   if (context.state)
-    context.state->handleUiAction(selectedIndex);
+    context.state->handleUiAction();
 }
 
 void Application::handleUiBack() {
@@ -70,14 +70,6 @@ void Application::handleSmsSentResult(common::PhoneNumber to, bool success) {
     context.state->handleSmsSentResult(to, success);
 }
 
-void Application::handleSmsComposeResult(common::PhoneNumber recipient,
-                                         const std::string &text) {
-  context.smsDb.addSentSms(recipient, text);
-  context.bts.sendSms(recipient, text);
-
-  context.setState<ConnectedState>();
-}
-
 void Application::handleCallUnknownRecipient(common::PhoneNumber to) {
   logger.logInfo("Call to unknown recipient: ", to);
   if (context.state)
@@ -100,6 +92,12 @@ void Application::handleCallReceived(common::PhoneNumber fromNumber) {
   logger.logInfo("Call received from: ", fromNumber);
   if (context.state)
     context.state->handleCallReceived(fromNumber);
+}
+
+void Application::handleItemSelected(std::optional<std::size_t> index) {
+  logger.logInfo("Item selected: ", std::to_string(index.value()));
+  if (context.state)
+    context.state->handleItemSelected(index);
 }
 
 } // namespace ue

@@ -38,17 +38,8 @@ void BaseState::handleSmsSentResult(common::PhoneNumber to, bool success) {
                   ", Success: ", success);
 }
 
-void BaseState::handleSmsComposeResult(common::PhoneNumber recipient,
-                                       const std::string &text) {
-  logger.logError("Unexpected: handleSmsComposeResult for: ", recipient,
-                  ", text: ", text);
-}
-
-void BaseState::handleUiAction(std::optional<std::size_t> selectedIndex) {
-  std::string indexStr = selectedIndex.has_value()
-                             ? std::to_string(selectedIndex.value())
-                             : "none";
-  logger.logError("Unexpected: handleUiAction, index: ", indexStr);
+void BaseState::handleUiAction() {
+  logger.logError("Unexpected: handleUiAccept");
 }
 
 void BaseState::handleUiBack() { logger.logError("Unexpected: handleUiBack"); }
@@ -71,6 +62,10 @@ void BaseState::handleCallDropped() {
 
 void BaseState::handleCallReceived(common::PhoneNumber fromNumber) {
   logger.logError("Unexpected: handleCallReceived from: ", fromNumber);
+}
+
+void BaseState::handleItemSelected(std::optional<std::size_t> index) {
+  logger.logError("Unexpected: handleItemSelected");
 }
 
 } // namespace ue

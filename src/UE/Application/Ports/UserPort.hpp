@@ -24,17 +24,20 @@ namespace ue
         void showNotConnected() override;
         void showConnecting() override;
         void showConnected() override;
-        void showNewSms() override;
+        void showNewSms(bool present) override;
         void displaySmsList(const std::vector<SmsMessage>& messages);
         void displaySmsContent(const SmsMessage& message);
         void displayAlert(const std::string& title, const std::string& message);
         void showSmsCompose() override;
+        void showSmsMenuList() override;
+        void clearSmsCompose() override;
 
         common::PhoneNumber getSmsRecipient() const override;
         std::string getSmsText() const override;
 
         void startDial() override;
         common::PhoneNumber getDialRecipient() const override;
+        void startTalking() override;
 
       private:
         void acceptCallback();
@@ -45,8 +48,7 @@ namespace ue
         common::PrefixedLogger logger;
         IUeGui& gui;
         common::PhoneNumber phoneNumber;
-        IEventsHandler* handler = nullptr;
-        details::GuiViewMode currentViewMode = details::VIEW_MODE_UNKNOWN;
+        IEventsHandler *handler = nullptr;
     };
 
 }

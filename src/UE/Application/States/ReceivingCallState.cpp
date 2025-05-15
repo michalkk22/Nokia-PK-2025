@@ -8,8 +8,7 @@ ReceivingCallState::ReceivingCallState(Context &context,
                                        common::PhoneNumber fromNumber)
     : ConnectedState(context, "ReceivingCallState"), fromNumber(fromNumber) {}
 
-void ReceivingCallState::handleUiAction(
-    std::optional<std::size_t> selectedIndex) {}
+void ReceivingCallState::handleUiAction() {}
 
 void ReceivingCallState::handleUiAccept() {
   logger.logInfo(

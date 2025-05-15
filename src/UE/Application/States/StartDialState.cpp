@@ -16,9 +16,7 @@ void StartDialState::startDial() {
   context.user.startDial();
 }
 
-void StartDialState::handleUiAction(std::optional<std::size_t> selectedIndex) {
-  logger.logInfo("User pressed message - no action taken.");
-}
+void StartDialState::handleUiAction() {}
 
 void StartDialState::handleUiAccept() {
   logger.logInfo(
