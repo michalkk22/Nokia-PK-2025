@@ -17,7 +17,7 @@ public:
     void handleCallUnknownRecipient(common::PhoneNumber to) override;
     void handleCallReceived(common::PhoneNumber fromNumber) override;
     void dropAnotherCall(common::PhoneNumber fromNumber);
-    void handleUiAction(std::optional<std::size_t> selectedIndex) override;
+    void handleUiAction() override;
     void handleUiBack() override;
     void handleUiAccept() override;
 

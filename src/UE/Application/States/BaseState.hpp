@@ -24,14 +24,14 @@ public:
     void handleDisconnected() override;
     void handleSmsReceived(common::PhoneNumber fromNumber, std::string message) override;
     void handleSmsSentResult(common::PhoneNumber to, bool success) override;
-    void handleSmsComposeResult(common::PhoneNumber recipient, const std::string& text) override;
-    void handleUiAction(std::optional<std::size_t> selectedIndex) override;
+    void handleUiAction() override;
     void handleUiBack() override;
     void handleUiAccept() override;
     void handleCallUnknownRecipient(common::PhoneNumber to) override;
     void handleCallAccepted() override;
     void handleCallDropped() override;
     void handleCallReceived(common::PhoneNumber fromNumber) override;
+    void handleItemSelected(std::optional<std::size_t> index) override;
 
   protected:
     Context& context;

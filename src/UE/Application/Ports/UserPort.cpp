@@ -26,18 +26,11 @@ void UserPort::stop() {
   gui.setItemSelectedCallback(nullptr);
 }
 
-void UserPort::showNotConnected() {
-  currentViewMode = details::VIEW_MODE_UNKNOWN;
-  gui.showNotConnected();
-}
+void UserPort::showNotConnected() { gui.showNotConnected(); }
 
-void UserPort::showConnecting() {
-  currentViewMode = details::VIEW_MODE_UNKNOWN;
-  gui.showConnecting();
-}
+void UserPort::showConnecting() { gui.showConnecting(); }
 
 void UserPort::showConnected() {
-  currentViewMode = details::VIEW_MODE_MAIN_MENU;
   logger.logInfo("Main view");
   IUeGui::IListViewMode &menu = gui.setListViewMode();
   menu.clearSelectionList();
@@ -47,40 +40,24 @@ void UserPort::showConnected() {
 void UserPort::mailCallback() {
   if (!handler)
     return;
-
-  logger.logDebug("mailCallback() - Current UI state: ", currentViewMode);
-
-  logger.logDebug("Mail button clicked - initiating SMS functionality");
-
-  if (currentViewMode == details::VIEW_MODE_SMS_COMPOSE) {
-    logger.logInfo("SMS compose view active - attempting to send message");
-    auto recipient = getSmsRecipient();
-    auto text = getSmsText();
-
-    if (!recipient.isValid() || text.empty()) {
-      displayAlert("Error", "Invalid recipient or empty text");
-      return;
-    }
-    handler->handleSmsComposeResult(recipient, text);
-
-    gui.getSmsComposeMode().clearSmsText();
-  } else {
-    logger.logInfo("Switching to SMS menu view");
-    currentViewMode = details::VIEW_MODE_SMS_MENU;
-    IUeGui::IListViewMode &menu = gui.setListViewMode();
-    menu.clearSelectionList();
-    menu.addSelectionListItem("Compose SMS", "Send a new text message");
-    menu.addSelectionListItem("View SMS", "Read received messages");
-  }
+  handler->handleUiAction();
 }
 
-void UserPort::showNewSms() {
-  logger.logInfo("New SMS notification");
-  gui.showNewSms(true);
+void UserPort::clearSmsCompose() {
+  logger.logDebug("Clearing SMS compose screen");
+  gui.getSmsComposeMode().clearSmsText();
 }
+
+void UserPort::showSmsMenuList() {
+  IUeGui::IListViewMode &menu = gui.setListViewMode();
+  menu.clearSelectionList();
+  menu.addSelectionListItem("Compose SMS", "Send a new text message");
+  menu.addSelectionListItem("View SMS", "Read received messages");
+}
+
+void UserPort::showNewSms(bool present) { gui.showNewSms(present); }
 
 void UserPort::displaySmsList(const std::vector<SmsMessage> &smsList) {
-  currentViewMode = details::VIEW_MODE_SMS_LIST;
   logger.logInfo("Showing SMS list, count: ", smsList.size());
 
   IUeGui::IListViewMode &listView = gui.setListViewMode();
@@ -109,8 +86,6 @@ void UserPort::displaySmsList(const std::vector<SmsMessage> &smsList) {
 }
 
 void UserPort::displaySmsContent(const SmsMessage &sms) {
-  currentViewMode = details::VIEW_MODE_SMS_VIEW;
-
   std::string labelPrefix =
       (sms.direction == SmsMessage::Direction::INCOMING) ? "From: " : "To: ";
   logger.logInfo(labelPrefix, sms.fromNumber);
@@ -118,8 +93,11 @@ void UserPort::displaySmsContent(const SmsMessage &sms) {
   IUeGui::ITextMode &viewer = gui.setViewTextMode();
 
   std::string displayText = labelPrefix + common::to_string(sms.fromNumber);
+  std::string text = sms.text;
   displayText += "\n\n--- Message Content ---\n";
-  displayText += sms.text;
+  text.erase(0,
+             1); // Remove the first character which diplays as unknown '?' mark
+  displayText += text;
 
   if (sms.direction == SmsMessage::Direction::OUTGOING) {
     std::string statusText =
@@ -132,15 +110,12 @@ void UserPort::displaySmsContent(const SmsMessage &sms) {
 
 void UserPort::displayAlert(const std::string &title,
                             const std::string &message) {
-
-  currentViewMode = details::VIEW_MODE_UNKNOWN;
   logger.logInfo("Alert: ", title);
   IUeGui::ITextMode &alerter = gui.setAlertMode();
   alerter.setText(title + "\n\n" + message);
 }
 
 void UserPort::showSmsCompose() {
-  currentViewMode = details::VIEW_MODE_SMS_COMPOSE;
   logger.logInfo("Showing SMS Compose screen");
   auto &composeMode = gui.setSmsComposeMode();
 
@@ -149,65 +124,65 @@ void UserPort::showSmsCompose() {
 }
 
 void UserPort::itemSelectedCallback() {
-  std::optional<std::size_t> selectedIndexOpt;
+  if (!handler)
+    return;
 
-  if (currentViewMode == details::VIEW_MODE_MAIN_MENU) {
-    logger.logDebug(
-        "Main menu action triggered - fetching current selection index");
-    auto &listView = gui.setListViewMode();
-    auto indexPair = listView.getCurrentItemIndex();
-    selectedIndexOpt = indexPair.first
-                           ? std::optional<std::size_t>(indexPair.second)
-                           : std::nullopt;
-  } else if (currentViewMode == details::VIEW_MODE_SMS_MENU) {
-    logger.logDebug(
-        "SMS menu action triggered - resolving selected menu item index");
-    auto &listView = gui.setListViewMode();
-    auto indexPair = listView.getCurrentItemIndex();
-    selectedIndexOpt = indexPair.first
-                           ? std::optional<std::size_t>(indexPair.second)
-                           : std::nullopt;
+  // if (currentViewMode == details::VIEW_MODE_MAIN_MENU) {
+  //   logger.logDebug(
+  //       "Main menu action triggered - fetching current selection index");
+  //   auto &listView = gui.setListViewMode();
+  //   auto indexPair = listView.getCurrentItemIndex();
+  //   selectedIndexOpt = indexPair.first
+  //                          ? std::optional<std::size_t>(indexPair.second)
+  //                          : std::nullopt;
+  // } else if (currentViewMode == details::VIEW_MODE_SMS_MENU) {
+  //   logger.logDebug(
+  //       "SMS menu action triggered - resolving selected menu item index");
+  auto &listView = gui.setListViewMode();
+  auto indexPair = listView.getCurrentItemIndex();
+  auto selectedIndexOpt = indexPair.first
+                              ? std::optional<std::size_t>(indexPair.second)
+                              : std::nullopt;
 
-    if (selectedIndexOpt.has_value()) {
-      if (selectedIndexOpt.value() == 0) {
-        logger.logInfo("Compose SMS selected from SMS menu");
-        showSmsCompose();
-        selectedIndexOpt = std::nullopt;
-      }
-    }
-  } else if (currentViewMode == details::VIEW_MODE_SMS_LIST) {
-    logger.logDebug(
-        "Fetching selected SMS from the list after 'Accept' action");
-    auto &listView = gui.setListViewMode();
-    auto indexPair = listView.getCurrentItemIndex();
-    selectedIndexOpt = indexPair.first
-                           ? std::optional<std::size_t>(indexPair.second)
-                           : std::nullopt;
-  } else if (currentViewMode == details::VIEW_MODE_SMS_COMPOSE) {
-    logger.logDebug("Ignoring accept action – currently viewing SMS content");
-    selectedIndexOpt = std::nullopt;
-  }
+  handler->handleItemSelected(selectedIndexOpt);
 
-  logger.logDebug(
-      "User triggered accept - ViewMode: ", currentViewMode,
-      ", Selected Index: ",
-      (selectedIndexOpt ? std::to_string(*selectedIndexOpt) : "None"));
-  handler->handleUiAction(selectedIndexOpt);
+  // if (selectedIndexOpt.has_value()) {
+  //   if (selectedIndexOpt.value() == 0) {
+  //     logger.logInfo("Compose SMS selected from SMS menu");
+  //     showSmsCompose();
+  //     selectedIndexOpt = std::nullopt;
+  //   }
+  // }
+
+  // } else if (currentViewMode == details::VIEW_MODE_SMS_LIST) {
+  //   logger.logDebug(
+  //       "Fetching selected SMS from the list after 'Accept' action");
+  //   auto &listView = gui.setListViewMode();
+  //   auto indexPair = listView.getCurrentItemIndex();
+  //   selectedIndexOpt = indexPair.first
+  //                          ? std::optional<std::size_t>(indexPair.second)
+  //                          : std::nullopt;
+  // } else if (currentViewMode == details::VIEW_MODE_SMS_COMPOSE) {
+  //   logger.logDebug("Ignoring accept action – currently viewing SMS
+  //   content"); selectedIndexOpt = std::nullopt;
+  // }
+
+  // logger.logDebug(
+  //     "User triggered accept - ViewMode: ", currentViewMode,
+  //     ", Selected Index: ",
+  //     (selectedIndexOpt ? std::to_string(*selectedIndexOpt) : "None"));
+  // handler->handleUiAction(selectedIndexOpt);
 }
 
 void UserPort::acceptCallback() {
   if (!handler)
     return;
-
-  logger.logDebug("acceptCallback() - Current UI mode: ", currentViewMode);
   handler->handleUiAccept();
 }
 
 void UserPort::rejectCallback() {
   if (!handler)
     return;
-  logger.logDebug("User pressed back/cancel - Current UI state: ",
-                  currentViewMode);
   handler->handleUiBack();
 }
 
@@ -219,17 +194,12 @@ std::string UserPort::getSmsText() const {
   return gui.getSmsComposeMode().getSmsText();
 }
 
-void UserPort::startDial() {
-  if (!handler)
-    return;
-
-  logger.logDebug("Starting dial mode");
-  currentViewMode = details::VIEW_MODE_CALL_DIAL;
-  gui.setDialMode();
-}
+void UserPort::startDial() { gui.setDialMode(); }
 
 common::PhoneNumber UserPort::getDialRecipient() const {
   return gui.setDialMode().getPhoneNumber();
 }
+
+void UserPort::startTalking() { gui.setCallMode(); }
 
 } // namespace ue
