@@ -127,17 +127,6 @@ void UserPort::itemSelectedCallback() {
   if (!handler)
     return;
 
-  // if (currentViewMode == details::VIEW_MODE_MAIN_MENU) {
-  //   logger.logDebug(
-  //       "Main menu action triggered - fetching current selection index");
-  //   auto &listView = gui.setListViewMode();
-  //   auto indexPair = listView.getCurrentItemIndex();
-  //   selectedIndexOpt = indexPair.first
-  //                          ? std::optional<std::size_t>(indexPair.second)
-  //                          : std::nullopt;
-  // } else if (currentViewMode == details::VIEW_MODE_SMS_MENU) {
-  //   logger.logDebug(
-  //       "SMS menu action triggered - resolving selected menu item index");
   auto &listView = gui.setListViewMode();
   auto indexPair = listView.getCurrentItemIndex();
   auto selectedIndexOpt = indexPair.first
@@ -145,33 +134,6 @@ void UserPort::itemSelectedCallback() {
                               : std::nullopt;
 
   handler->handleItemSelected(selectedIndexOpt);
-
-  // if (selectedIndexOpt.has_value()) {
-  //   if (selectedIndexOpt.value() == 0) {
-  //     logger.logInfo("Compose SMS selected from SMS menu");
-  //     showSmsCompose();
-  //     selectedIndexOpt = std::nullopt;
-  //   }
-  // }
-
-  // } else if (currentViewMode == details::VIEW_MODE_SMS_LIST) {
-  //   logger.logDebug(
-  //       "Fetching selected SMS from the list after 'Accept' action");
-  //   auto &listView = gui.setListViewMode();
-  //   auto indexPair = listView.getCurrentItemIndex();
-  //   selectedIndexOpt = indexPair.first
-  //                          ? std::optional<std::size_t>(indexPair.second)
-  //                          : std::nullopt;
-  // } else if (currentViewMode == details::VIEW_MODE_SMS_COMPOSE) {
-  //   logger.logDebug("Ignoring accept action – currently viewing SMS
-  //   content"); selectedIndexOpt = std::nullopt;
-  // }
-
-  // logger.logDebug(
-  //     "User triggered accept - ViewMode: ", currentViewMode,
-  //     ", Selected Index: ",
-  //     (selectedIndexOpt ? std::to_string(*selectedIndexOpt) : "None"));
-  // handler->handleUiAction(selectedIndexOpt);
 }
 
 void UserPort::acceptCallback() {
