@@ -6,7 +6,7 @@ namespace ue {
 
 class SendingCallState : public StartDialState {
 public:
-  SendingCallState(Context &context);
+  SendingCallState(Context &context, common::PhoneNumber recipient);
   void handleUiBack() override;
   void handleUiAccept() override;
   void handleTimeout() override;
@@ -16,6 +16,7 @@ public:
   void handleCallReceived(common::PhoneNumber fromNumber) override;
 
 private:
+  common::PhoneNumber recipient;
 };
 
 } // namespace ue
