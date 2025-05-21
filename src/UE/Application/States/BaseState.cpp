@@ -68,4 +68,9 @@ void BaseState::handleItemSelected(std::optional<std::size_t> index) {
   logger.logError("Unexpected: handleItemSelected");
 }
 
+void BaseState::handleCallTalkReceived(common::PhoneNumber fromNumber,
+                                       std::string text) {
+  logger.logError("Unexpected: handleCallTalkReceived");
+}
+
 } // namespace ue

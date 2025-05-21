@@ -162,6 +162,20 @@ common::PhoneNumber UserPort::getDialRecipient() const {
   return gui.setDialMode().getPhoneNumber();
 }
 
-void UserPort::startTalking() { gui.setCallMode(); }
+void UserPort::startTalking() {
+  gui.setCallMode();
+  gui.setCallMode().clearIncomingText();
+  gui.setCallMode().clearOutgoingText();
+}
+
+std::string UserPort::getCallText() {
+  return gui.setCallMode().getOutgoingText();
+}
+
+void UserPort::clearCallText() { gui.setCallMode().clearOutgoingText(); }
+
+void UserPort::addCallText(const std::string &text) {
+  gui.setCallMode().appendIncomingText(text);
+}
 
 } // namespace ue

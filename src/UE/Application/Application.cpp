@@ -51,53 +51,50 @@ void Application::handleAttachReject() {
 }
 
 void Application::handleDisconnected() {
-  logger.logInfo("Disconnected");
   if (context.state)
     context.state->handleDisconnected();
 }
 
 void Application::handleSmsReceived(common::PhoneNumber fromNumber,
                                     std::string message) {
-  logger.logInfo("SMS received from: ", fromNumber);
   if (context.state)
     context.state->handleSmsReceived(fromNumber, message);
 }
 
 void Application::handleSmsSentResult(common::PhoneNumber to, bool success) {
-  logger.logInfo("SMS send result - Recipient: ", to,
-                 ", Status: ", success ? "Delivered" : "Failed");
   if (context.state)
     context.state->handleSmsSentResult(to, success);
 }
 
 void Application::handleCallUnknownRecipient(common::PhoneNumber to) {
-  logger.logInfo("Call to unknown recipient: ", to);
   if (context.state)
     context.state->handleCallUnknownRecipient(to);
 }
 
 void Application::handleCallAccepted() {
-  logger.logInfo("Call accepted");
   if (context.state)
     context.state->handleCallAccepted();
 }
 
 void Application::handleCallDropped() {
-  logger.logInfo("Call dropped");
   if (context.state)
     context.state->handleCallDropped();
 }
 
 void Application::handleCallReceived(common::PhoneNumber fromNumber) {
-  logger.logInfo("Call received from: ", fromNumber);
   if (context.state)
     context.state->handleCallReceived(fromNumber);
 }
 
 void Application::handleItemSelected(std::optional<std::size_t> index) {
-  logger.logInfo("Item selected: ", std::to_string(index.value()));
   if (context.state)
     context.state->handleItemSelected(index);
+}
+
+void Application::handleCallTalkReceived(common::PhoneNumber fromNumber,
+                                         std::string text) {
+  if (context.state)
+    context.state->handleCallTalkReceived(fromNumber, text);
 }
 
 } // namespace ue

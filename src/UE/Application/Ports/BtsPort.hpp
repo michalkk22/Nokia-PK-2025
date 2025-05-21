@@ -20,6 +20,8 @@ namespace ue
         void sendCallRequest(common::PhoneNumber to) override;
         void sendCallAccepted(common::PhoneNumber to) override;
         void sendCallDropped(common::PhoneNumber to) override;
+        void sendCallTalk(common::PhoneNumber to,
+                          const std::string &text) override;
 
       private:
         void handleMessage(common::BinaryMessage msg);
