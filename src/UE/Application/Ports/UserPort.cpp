@@ -95,8 +95,10 @@ void UserPort::displaySmsContent(const SmsMessage &sms) {
   std::string displayText = labelPrefix + common::to_string(sms.fromNumber);
   std::string text = sms.text;
   displayText += "\n\n--- Message Content ---\n";
-  text.erase(0,
-             1); // Remove the first character which diplays as unknown '?' mark
+  if (sms.direction == SmsMessage::Direction::INCOMING) {
+    // Remove the first character which diplays as unknown '?' mark
+    text.erase(0, 1);
+  }
   displayText += text;
 
   if (sms.direction == SmsMessage::Direction::OUTGOING) {
