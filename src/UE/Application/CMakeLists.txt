@@ -15,6 +15,7 @@ set(APPLICATION_SOURCES
     States/NotConnectedState.cpp
     States/ViewSmsListState.cpp     
     States/ViewSmsState.cpp  
+    States/SmsMenuState.cpp
     States/ComposeSmsState.cpp 
     States/StartDialState.cpp
     States/SendingCallState.cpp

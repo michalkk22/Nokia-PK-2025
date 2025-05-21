@@ -10,6 +10,8 @@ public:
   void handleUiBack() override;
   void handleCallDropped() override;
   void handleCallReceived(common::PhoneNumber fromNumber) override;
+  void handleUiAccept() override;
+  void handleUiAction() override;
 
 private:
   common::PhoneNumber recipient;

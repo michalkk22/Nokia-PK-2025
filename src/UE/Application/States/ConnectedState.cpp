@@ -2,8 +2,8 @@
 #include "ComposeSmsState.hpp"
 #include "NotConnectedState.hpp"
 #include "ReceivingCallState.hpp"
+#include "SmsMenuState.hpp"
 #include "StartDialState.hpp"
-#include "ViewSmsListState.hpp"
 #include <vector>
 
 namespace ue {
@@ -29,33 +29,12 @@ void ConnectedState::handleSmsReceived(common::PhoneNumber fromNumber,
   std::size_t smsIndex = context.smsDb.addReceivedSms(fromNumber, message);
   logger.logDebug("Stored SMS at index: ", smsIndex);
 
-  context.user.showNewSms();
+  context.user.showNewSms(true);
 }
 
-void ConnectedState::handleUiAction(std::optional<std::size_t> selectedIndex) {
-  if (!selectedIndex.has_value()) {
-    logger.logInfo("No selection provided from UI in Main Menu");
-    return;
-  }
-
-  std::size_t index = selectedIndex.value();
-  logger.logInfo("User selected main menu option with index: ", index);
-
-  switch (index) {
-  case 0:
-    logger.logInfo("Compose SMS selected");
-    context.setState<ComposeSmsState>();
-    break;
-
-  case 1:
-    logger.logInfo("View SMS selected");
-    context.setState<ViewSmsListState>();
-    break;
-
-  default:
-    logger.logError("Invalid menu option selected: ", index);
-    break;
-  }
+void ConnectedState::handleUiAction() {
+  logger.logInfo("Mail button pressed.");
+  context.setState<SmsMenuState>();
 }
 
 void ConnectedState::handleUiBack() {
