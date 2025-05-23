@@ -59,6 +59,32 @@ protected:
                                     common::PhoneNumber{}};
     return message.getMessage();
   }
+
+  common::BinaryMessage createCallRequestMessage(common::PhoneNumber from) {
+    common::OutgoingMessage msg{
+        common::MessageId::CallRequest, from, PHONE_NUMBER};
+    return msg.getMessage();
+  }
+
+  common::BinaryMessage createCallDroppedMessage(common::PhoneNumber from) {
+    common::OutgoingMessage msg{
+        common::MessageId::CallDropped, from, PHONE_NUMBER};
+    return msg.getMessage();
+  }
+
+  common::BinaryMessage createCallAcceptedMessage(common::PhoneNumber from) {
+    common::OutgoingMessage msg{
+        common::MessageId::CallAccepted, from, PHONE_NUMBER};
+    return msg.getMessage();
+  }
+
+  common::BinaryMessage createCallTalkMessage(common::PhoneNumber from,
+                                              const std::string &text) {
+    common::OutgoingMessage msg{
+        common::MessageId::CallTalk, from, PHONE_NUMBER};
+    msg.writeText(text);
+    return msg.getMessage();
+  }
 };
 
 TEST_F(BtsPortTestSuite, shallRegisterHandlersBetweenStartStop) { SUCCEED(); }
@@ -98,6 +124,31 @@ TEST_F(BtsPortTestSuite, shallSendAttachRequest) {
 TEST_F(BtsPortTestSuite, shallHandleDisconnectedFromTransport) {
   EXPECT_CALL(handlerMock, handleDisconnected());
   disconnectedCallback();
+}
+
+TEST_F(BtsPortTestSuite, shallHandleCallRequest) {
+  common::PhoneNumber from{55};
+  EXPECT_CALL(handlerMock, handleCallReceived(from));
+  messageCallback(createCallRequestMessage(from));
+}
+
+TEST_F(BtsPortTestSuite, shallHandleCallDropped) {
+  common::PhoneNumber from{99};
+  EXPECT_CALL(handlerMock, handleCallDropped());
+  messageCallback(createCallDroppedMessage(from));
+}
+
+TEST_F(BtsPortTestSuite, shallHandleCallAccepted) {
+  common::PhoneNumber from{123};
+  EXPECT_CALL(handlerMock, handleCallAccepted());
+  messageCallback(createCallAcceptedMessage(from));
+}
+
+TEST_F(BtsPortTestSuite, shallHandleCallTalk) {
+  common::PhoneNumber from{7};
+  const std::string text = "Hello!";
+  EXPECT_CALL(handlerMock, handleCallTalkReceived(from, text));
+  messageCallback(createCallTalkMessage(from, text));
 }
 
 } // namespace ue
