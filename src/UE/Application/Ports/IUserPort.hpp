@@ -33,6 +33,9 @@ public:
     virtual std::string getSmsText() const = 0;
     virtual void showSmsMenuList() = 0;
     virtual void clearSmsCompose() = 0;
+    virtual std::string getCallText() = 0;
+    virtual void clearCallText() = 0;
+    virtual void addCallText(const std::string &text) = 0;
 
     // Calls
     virtual void startDial() = 0;

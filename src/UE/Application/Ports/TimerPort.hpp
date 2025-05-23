@@ -4,6 +4,8 @@
 #include "Logger/PrefixedLogger.hpp"
 
 #include <atomic>
+#include <chrono>
+#include <memory>
 #include <thread>
 
 namespace ue
@@ -24,8 +26,7 @@ public:
 private:
     common::PrefixedLogger logger;
     ITimerEventsHandler* handler = nullptr;
-    std::unique_ptr<std::thread> timerThread;
-    std::atomic<bool> timerRunning{false};
+    std::shared_ptr<std::atomic<bool>> cancelToken;
 };
 
 }

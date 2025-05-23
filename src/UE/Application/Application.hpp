@@ -43,6 +43,8 @@ namespace ue
         void handleCallAccepted() override;
         void handleCallDropped() override;
         void handleItemSelected(std::optional<std::size_t> index) override;
+        void handleCallTalkReceived(common::PhoneNumber fromNumber,
+                                    std::string text) override;
 
       private:
         Context context;

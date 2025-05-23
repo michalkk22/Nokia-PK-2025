@@ -24,21 +24,23 @@ void TimerPort::startTimer(Duration duration) {
   logger.logDebug("Start timer: ", duration.count(), "ms");
 
   stopTimer();
-  timerRunning = true;
 
-  timerThread = std::make_unique<std::thread>([this, duration]() {
+  auto token = std::make_shared<std::atomic<bool>>(true);
+  cancelToken = token;
+
+  std::thread([this, duration, token]() {
     std::this_thread::sleep_for(duration);
-    if (timerRunning) {
-      logger.logInfo("Timeout");
+    if (*token) {
       handler->handleTimeout();
     }
-  });
-
-  timerThread->detach();
+  }).detach();
 }
 
 void TimerPort::stopTimer() {
-  timerRunning = false;
+  if (cancelToken) {
+    *cancelToken = false;
+  }
+
   logger.logDebug("Stop timer");
 }
 

@@ -6,6 +6,7 @@
 #include "Logger/PrefixedLogger.hpp"
 #include "Messages/PhoneNumber.hpp"
 #include "SmsDb.hpp"
+#include "UeGui/ICallMode.hpp"
 #include "UeGui/IDialMode.hpp"
 #include "UeGui/ISmsComposeMode.hpp"
 #include <optional>
@@ -38,6 +39,9 @@ namespace ue
         void startDial() override;
         common::PhoneNumber getDialRecipient() const override;
         void startTalking() override;
+        std::string getCallText() override;
+        void clearCallText() override;
+        void addCallText(const std::string &text) override;
 
       private:
         void acceptCallback();

@@ -95,8 +95,10 @@ void UserPort::displaySmsContent(const SmsMessage &sms) {
   std::string displayText = labelPrefix + common::to_string(sms.fromNumber);
   std::string text = sms.text;
   displayText += "\n\n--- Message Content ---\n";
-  text.erase(0,
-             1); // Remove the first character which diplays as unknown '?' mark
+  if (sms.direction == SmsMessage::Direction::INCOMING) {
+    // Remove the first character which diplays as unknown '?' mark
+    text.erase(0, 1);
+  }
   displayText += text;
 
   if (sms.direction == SmsMessage::Direction::OUTGOING) {
@@ -162,6 +164,20 @@ common::PhoneNumber UserPort::getDialRecipient() const {
   return gui.setDialMode().getPhoneNumber();
 }
 
-void UserPort::startTalking() { gui.setCallMode(); }
+void UserPort::startTalking() {
+  gui.setCallMode();
+  gui.setCallMode().clearIncomingText();
+  gui.setCallMode().clearOutgoingText();
+}
+
+std::string UserPort::getCallText() {
+  return gui.setCallMode().getOutgoingText();
+}
+
+void UserPort::clearCallText() { gui.setCallMode().clearOutgoingText(); }
+
+void UserPort::addCallText(const std::string &text) {
+  gui.setCallMode().appendIncomingText(text);
+}
 
 } // namespace ue
