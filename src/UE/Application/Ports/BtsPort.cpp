@@ -24,42 +24,40 @@ void BtsPort::stop() {
 
 void BtsPort::handleMessage(BinaryMessage msg) {
   try {
-    if (!handler) {
-      return;
-    }
+    if (!handler) return;
+
     common::IncomingMessage reader{msg};
     auto msgId = reader.readMessageId();
     auto phoneNumber = reader.readPhoneNumber();
+    (void)reader.readPhoneNumber();        
     common::MessageHeader messageHeader;
 
     switch (msgId) {
-    case common::MessageId::Sib: {
-      auto btsId = reader.readBtsId();
-      handler->handleSib(btsId);
-      break;
-    }
-    case common::MessageId::AttachResponse: {
-      bool accept = reader.readNumber<std::uint8_t>() != 0u;
-      if (accept)
-        handler->handleAttachAccept();
-      else
-        handler->handleAttachReject();
-      break;
-    }
-    case common::MessageId::CallTalk: {
-      std::string message = reader.readRemainingText();
-      handler->handleCallTalkReceived(phoneNumber, message);
-      break;
-    }
-    case common::MessageId::Sms: {
-      std::string message = reader.readRemainingText();
-      handler->handleSmsReceived(phoneNumber, message);
-      break;
-    }
-    case common::MessageId::UnknownRecipient: {
-      messageHeader = reader.readMessageHeader();
-      switch (messageHeader.messageId) {
-      case common::MessageId::Sms:
+      case common::MessageId::Sib: {
+        auto btsId = reader.readBtsId();
+        handler->handleSib(btsId);
+        break;
+      }
+      case common::MessageId::AttachResponse: {
+        bool accept = reader.readNumber<std::uint8_t>() != 0;
+        if (accept) handler->handleAttachAccept();
+        else        handler->handleAttachReject();
+        break;
+      }
+      case common::MessageId::CallTalk: {
+        std::string message = reader.readRemainingText();
+        handler->handleCallTalkReceived(phoneNumber, message);
+        break;
+      }
+      case common::MessageId::Sms: {
+        std::string message = reader.readRemainingText();
+        handler->handleSmsReceived(phoneNumber, message);
+        break;
+      }
+      case common::MessageId::UnknownRecipient: {
+        messageHeader = reader.readMessageHeader();
+        switch (messageHeader.messageId) {
+          case common::MessageId::Sms:
         logger.logError("Failed to send SMS – Recipient not found.",
                         messageHeader.to);
         handler->handleSmsSentResult(messageHeader.to, false);
@@ -73,30 +71,33 @@ void BtsPort::handleMessage(BinaryMessage msg) {
         logger.logError("Failed to send message – Recipient not found.",
                         messageHeader.to);
         break;
+        }
         break;
       }
-    case common::MessageId::CallRequest: {
+      case common::MessageId::CallRequest: {
       logger.logInfo("Call request received from: ", phoneNumber);
       handler->handleCallReceived(phoneNumber);
       break;
     }
-    case common::MessageId::CallDropped:
-      logger.logInfo("Call dropped");
-      handler->handleCallDropped();
-      break;
-    case common::MessageId::CallAccepted:
-      logger.logInfo("Call accepted");
-      handler->handleCallAccepted();
-      break;
+      case common::MessageId::CallDropped: {
+        logger.logInfo("Call dropped");
+        handler->handleCallDropped();
+        break;
+      }
+      case common::MessageId::CallAccepted: {
+        logger.logInfo("Call accepted");
+        handler->handleCallAccepted();
+        break;
+      }
+      case common::MessageId::UnknownSender: {
+        logger.logError("Critical error: Unknown sender");
+        break;
+      }
+      default:
+        logger.logError("unknown message: ", msgId, ", from: ", phoneNumber);
+        break;
     }
-    case common::MessageId::UnknownSender: {
-      logger.logError("Critical error: Unknown sender");
-      break;
-    }
-    default:
-      logger.logError("unknown message: ", msgId, ", from: ", phoneNumber);
-    }
-  } catch (std::exception const &ex) {
+  } catch (const std::exception &ex) {
     logger.logError("handleMessage error: ", ex.what());
   }
 }

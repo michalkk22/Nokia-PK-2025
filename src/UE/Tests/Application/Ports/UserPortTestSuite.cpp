@@ -24,12 +24,14 @@ protected:
     EXPECT_CALL(guiMock, setTitle(HasSubstr(common::to_string(PHONE_NUMBER))));
     EXPECT_CALL(guiMock, setAcceptCallback(_));
     EXPECT_CALL(guiMock, setRejectCallback(_));
+    EXPECT_CALL(guiMock, setMailCallback(_));
     objectUnderTest.start(handlerMock);
   }
 
   ~UserPortTestSuite() override {
     EXPECT_CALL(guiMock, setAcceptCallback(IsNull()));
     EXPECT_CALL(guiMock, setRejectCallback(IsNull()));
+    EXPECT_CALL(guiMock, setMailCallback(IsNull()));
     objectUnderTest.stop();
   }
 };
@@ -51,6 +53,7 @@ TEST_F(UserPortTestSuite, shallShowMenuOnConnected) {
   EXPECT_CALL(listViewModeMock, clearSelectionList());
   EXPECT_CALL(listViewModeMock, addSelectionListItem("Compose SMS", _));
   EXPECT_CALL(listViewModeMock, addSelectionListItem("View SMS", _));
+  EXPECT_CALL(guiMock, setItemSelectedCallback(_));
   EXPECT_CALL(guiMock, showConnected());
   objectUnderTest.showConnected();
 }
