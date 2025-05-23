@@ -62,13 +62,12 @@ TEST_F(UserPortTestSuite, shallStartDialAndGetRecipient) {
   StrictMock<IDialModeMock> dialModeMock;
 
   EXPECT_CALL(guiMock, setDialMode())
-    .Times(2)
-    .WillRepeatedly(ReturnRef(dialModeMock));
+      .Times(2)
+      .WillRepeatedly(ReturnRef(dialModeMock));
 
   objectUnderTest.startDial();
 
-  EXPECT_CALL(dialModeMock, getPhoneNumber())
-    .WillOnce(Return(PHONE_NUMBER));
+  EXPECT_CALL(dialModeMock, getPhoneNumber()).WillOnce(Return(PHONE_NUMBER));
 
   EXPECT_EQ(objectUnderTest.getDialRecipient(), PHONE_NUMBER);
 }

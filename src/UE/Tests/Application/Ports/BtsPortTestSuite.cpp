@@ -61,27 +61,27 @@ protected:
   }
 
   common::BinaryMessage createCallRequestMessage(common::PhoneNumber from) {
-    common::OutgoingMessage msg{
-        common::MessageId::CallRequest, from, PHONE_NUMBER};
+    common::OutgoingMessage msg{common::MessageId::CallRequest, from,
+                                PHONE_NUMBER};
     return msg.getMessage();
   }
 
   common::BinaryMessage createCallDroppedMessage(common::PhoneNumber from) {
-    common::OutgoingMessage msg{
-        common::MessageId::CallDropped, from, PHONE_NUMBER};
+    common::OutgoingMessage msg{common::MessageId::CallDropped, from,
+                                PHONE_NUMBER};
     return msg.getMessage();
   }
 
   common::BinaryMessage createCallAcceptedMessage(common::PhoneNumber from) {
-    common::OutgoingMessage msg{
-        common::MessageId::CallAccepted, from, PHONE_NUMBER};
+    common::OutgoingMessage msg{common::MessageId::CallAccepted, from,
+                                PHONE_NUMBER};
     return msg.getMessage();
   }
 
   common::BinaryMessage createCallTalkMessage(common::PhoneNumber from,
                                               const std::string &text) {
-    common::OutgoingMessage msg{
-        common::MessageId::CallTalk, from, PHONE_NUMBER};
+    common::OutgoingMessage msg{common::MessageId::CallTalk, from,
+                                PHONE_NUMBER};
     msg.writeText(text);
     return msg.getMessage();
   }
