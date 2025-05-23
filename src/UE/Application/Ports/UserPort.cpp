@@ -15,7 +15,6 @@ void UserPort::start(IEventsHandler &handler) {
   gui.setAcceptCallback(std::bind(&UserPort::acceptCallback, this));
   gui.setRejectCallback(std::bind(&UserPort::rejectCallback, this));
   gui.setMailCallback(std::bind(&UserPort::mailCallback, this));
-  gui.setItemSelectedCallback(std::bind(&UserPort::itemSelectedCallback, this));
 }
 
 void UserPort::stop() {
@@ -23,7 +22,6 @@ void UserPort::stop() {
   gui.setAcceptCallback(nullptr);
   gui.setRejectCallback(nullptr);
   gui.setMailCallback(nullptr);
-  gui.setItemSelectedCallback(nullptr);
 }
 
 void UserPort::showNotConnected() { gui.showNotConnected(); }
@@ -34,6 +32,9 @@ void UserPort::showConnected() {
   logger.logInfo("Main view");
   IUeGui::IListViewMode &menu = gui.setListViewMode();
   menu.clearSelectionList();
+  menu.addSelectionListItem("Compose SMS", "Compose a new message");
+  menu.addSelectionListItem("View SMS", "Browse messages");
+  gui.setItemSelectedCallback(std::bind(&UserPort::itemSelectedCallback, this));
   gui.showConnected();
 }
 
