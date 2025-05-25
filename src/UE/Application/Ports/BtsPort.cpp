@@ -7,7 +7,7 @@ namespace ue {
 BtsPort::BtsPort(common::ILogger &logger, common::ITransport &transport,
                  common::PhoneNumber phoneNumber)
     : logger(logger, "[BTS-PORT]"), transport(transport),
-      phoneNumber(phoneNumber) {}
+      myNumber(phoneNumber) {}
 
 void BtsPort::start(IBtsEventsHandler &handler) {
   transport.registerMessageCallback(
@@ -113,39 +113,40 @@ void BtsPort::handleDisconnected() {
 
 void BtsPort::sendAttachRequest(common::BtsId btsId) {
   logger.logDebug("sendAttachRequest: ", btsId);
-  common::OutgoingMessage msg{common::MessageId::AttachRequest, phoneNumber,
+  common::OutgoingMessage msg{common::MessageId::AttachRequest, myNumber,
                               common::PhoneNumber{}};
   msg.writeBtsId(btsId);
   transport.sendMessage(msg.getMessage());
 }
 void BtsPort::sendSms(common::PhoneNumber to, const std::string &text) {
   logger.logInfo("Sending SMS to: ", to);
-  common::OutgoingMessage msg{common::MessageId::Sms, phoneNumber, to};
+  common::OutgoingMessage msg{common::MessageId::Sms, myNumber, to};
   msg.writeText(text);
   transport.sendMessage(msg.getMessage());
 }
 
 void BtsPort::sendCallRequest(common::PhoneNumber to) {
   logger.logInfo("Sending call request to: ", to);
-  common::OutgoingMessage msg{common::MessageId::CallRequest, phoneNumber, to};
+  common::OutgoingMessage msg{common::MessageId::CallRequest, myNumber, to};
   transport.sendMessage(msg.getMessage());
 }
 
 void BtsPort::sendCallAccepted(common::PhoneNumber to) {
   logger.logInfo("Sending call accepted to: ", to);
-  common::OutgoingMessage msg{common::MessageId::CallAccepted, phoneNumber, to};
+  common::OutgoingMessage msg{common::MessageId::CallAccepted, myNumber, to};
   transport.sendMessage(msg.getMessage());
 }
 
 void BtsPort::sendCallDropped(common::PhoneNumber to) {
   logger.logInfo("Sending call dropped to: ", to);
-  common::OutgoingMessage msg{common::MessageId::CallDropped, phoneNumber, to};
+  common::OutgoingMessage msg{common::MessageId::CallDropped, myNumber, to};
   transport.sendMessage(msg.getMessage());
+  logger.logInfo("Sent call dropped to: ", to);
 }
 
 void BtsPort::sendCallTalk(common::PhoneNumber to, const std::string &text) {
   logger.logInfo("Sending call text to: ", to);
-  common::OutgoingMessage msg{common::MessageId::CallTalk, phoneNumber, to};
+  common::OutgoingMessage msg{common::MessageId::CallTalk, myNumber, to};
   msg.writeText(text);
   transport.sendMessage(msg.getMessage());
 }
