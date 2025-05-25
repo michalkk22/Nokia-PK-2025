@@ -16,13 +16,15 @@ public:
     void handleSmsSentResult(common::PhoneNumber to, bool success) override;
     void handleCallUnknownRecipient(common::PhoneNumber to) override;
     void handleCallReceived(common::PhoneNumber fromNumber) override;
-    void dropAnotherCall(common::PhoneNumber fromNumber);
     void handleUiAction() override;
     void handleUiBack() override;
     void handleUiAccept() override;
 
   private:
     void showMainMenu();
+
+  protected:
+    void dropAnotherCall(common::PhoneNumber fromNumber);
 };
 
 }
