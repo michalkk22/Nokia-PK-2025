@@ -73,4 +73,6 @@ void BaseState::handleCallTalkReceived(common::PhoneNumber fromNumber,
   logger.logError("Unexpected: handleCallTalkReceived");
 }
 
+void BaseState::handleShutdown() {}
+
 } // namespace ue

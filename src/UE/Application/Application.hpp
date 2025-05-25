@@ -24,6 +24,7 @@ namespace ue
                     IUserPort& user,
                     ITimerPort& timer);
         ~Application();
+        void handleShutdown() override;
 
         void handleUiAction() override;
         void handleUiBack() override;

@@ -7,6 +7,7 @@ namespace ue {
 class ReceivingCallState : public ConnectedState {
 public:
     ReceivingCallState(Context &context, common::PhoneNumber fromNumber);
+    void handleShutdown() override;
     void handleUiAction() override;
     void handleUiAccept() override;
     void handleUiBack() override;

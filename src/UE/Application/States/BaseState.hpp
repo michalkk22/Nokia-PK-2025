@@ -14,6 +14,8 @@ public:
     BaseState(Context& context, const std::string& name);
     ~BaseState() override;
 
+    void handleShutdown() override;
+
     // ITimerEventsHandler interface
     void handleTimeout() override;
 

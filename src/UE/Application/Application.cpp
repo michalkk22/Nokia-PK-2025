@@ -13,12 +13,17 @@ Application::Application(common::PhoneNumber phoneNumber,
   context.setState<NotConnectedState>();
 }
 
-Application::~Application() { logger.logInfo("Stopped"); }
+Application::~Application() {
+  context.state->handleShutdown();
+  logger.logInfo("Stopped");
+}
 
 void Application::handleUiAction() {
   if (context.state)
     context.state->handleUiAction();
 }
+
+void Application::handleShutdown() {}
 
 void Application::handleUiBack() {
   if (context.state)
