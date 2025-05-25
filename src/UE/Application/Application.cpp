@@ -92,7 +92,7 @@ void Application::handleItemSelected(std::optional<std::size_t> index) {
 }
 
 void Application::handleCallTalkReceived(common::PhoneNumber fromNumber,
-                                         std::string text) {
+                                         const std::string &text) {
   if (context.state)
     context.state->handleCallTalkReceived(fromNumber, text);
 }

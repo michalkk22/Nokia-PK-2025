@@ -44,7 +44,7 @@ namespace ue
         void handleCallDropped() override;
         void handleItemSelected(std::optional<std::size_t> index) override;
         void handleCallTalkReceived(common::PhoneNumber fromNumber,
-                                    std::string text) override;
+                                    const std::string &text) override;
 
       private:
         Context context;

@@ -33,7 +33,7 @@ public:
     void handleCallReceived(common::PhoneNumber fromNumber) override;
     void handleItemSelected(std::optional<std::size_t> index) override;
     void handleCallTalkReceived(common::PhoneNumber fromNumber,
-                                std::string text) override;
+                                const std::string &text) override;
 
   protected:
     Context& context;

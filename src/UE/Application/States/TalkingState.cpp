@@ -52,7 +52,7 @@ void TalkingState::handleUiAction() {
 }
 
 void TalkingState::handleCallTalkReceived(common::PhoneNumber fromNumber,
-                                          std::string text) {
+                                          const std::string &text) {
   if (fromNumber != recipient) {
     logger.logError("Received call talk from another number: ", fromNumber);
     return;
@@ -60,8 +60,6 @@ void TalkingState::handleCallTalkReceived(common::PhoneNumber fromNumber,
   context.timer.stopTimer();
 
   logger.logDebug("Received call talk from: ", fromNumber);
-
-  text.erase(0, 1); // remove the first character from incoming message
 
   context.user.addCallText(
       prepareDisplayText(std::to_string(fromNumber.value), text));

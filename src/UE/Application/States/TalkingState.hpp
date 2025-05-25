@@ -14,12 +14,11 @@ public:
   void handleUiAccept() override;
   void handleUiAction() override;
   void handleCallTalkReceived(common::PhoneNumber fromNumber,
-                              std::string text) override;
+                              const std::string &text) override;
 
 private:
   common::PhoneNumber recipient;
-  const ITimerPort::Duration timeoutDuration =
-      std::chrono::seconds{30}; // TODO: 30s
+  const ITimerPort::Duration timeoutDuration = std::chrono::seconds{120};
 
   std::string prepareDisplayText(const std::string &prefix,
                                  const std::string &text);

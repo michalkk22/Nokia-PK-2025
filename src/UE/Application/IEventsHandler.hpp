@@ -24,7 +24,7 @@ public:
   virtual void handleCallAccepted() = 0;
   virtual void handleItemSelected(std::optional<std::size_t> index) = 0;
   virtual void handleCallTalkReceived(common::PhoneNumber fromNumber,
-                                      std::string text) = 0;
+                                      const std::string &text) = 0;
 };
 
 } // namespace ue

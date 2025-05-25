@@ -69,7 +69,7 @@ void BaseState::handleItemSelected(std::optional<std::size_t> index) {
 }
 
 void BaseState::handleCallTalkReceived(common::PhoneNumber fromNumber,
-                                       std::string text) {
+                                       const std::string &text) {
   logger.logError("Unexpected: handleCallTalkReceived");
 }
 
