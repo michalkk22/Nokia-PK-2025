@@ -24,12 +24,13 @@ void BtsPort::stop() {
 
 void BtsPort::handleMessage(BinaryMessage msg) {
   try {
-    if (!handler) {
+    if (!handler)
       return;
-    }
+
     common::IncomingMessage reader{msg};
     auto msgId = reader.readMessageId();
     auto phoneNumber = reader.readPhoneNumber();
+    (void)reader.readPhoneNumber();
     common::MessageHeader messageHeader;
 
     switch (msgId) {
@@ -39,7 +40,7 @@ void BtsPort::handleMessage(BinaryMessage msg) {
       break;
     }
     case common::MessageId::AttachResponse: {
-      bool accept = reader.readNumber<std::uint8_t>() != 0u;
+      bool accept = reader.readNumber<std::uint8_t>() != 0;
       if (accept)
         handler->handleAttachAccept();
       else
@@ -73,18 +74,20 @@ void BtsPort::handleMessage(BinaryMessage msg) {
         logger.logError("Failed to send message – Recipient not found.",
                         messageHeader.to);
         break;
-        break;
       }
+      break;
+    }
     case common::MessageId::CallRequest: {
       logger.logInfo("Call request received from: ", phoneNumber);
       handler->handleCallReceived(phoneNumber);
       break;
     }
-    case common::MessageId::CallDropped:
+    case common::MessageId::CallDropped: {
       logger.logInfo("Call dropped");
       handler->handleCallDropped();
       break;
-    case common::MessageId::CallAccepted:
+    }
+    case common::MessageId::CallAccepted: {
       logger.logInfo("Call accepted");
       handler->handleCallAccepted();
       break;
@@ -95,8 +98,9 @@ void BtsPort::handleMessage(BinaryMessage msg) {
     }
     default:
       logger.logError("unknown message: ", msgId, ", from: ", phoneNumber);
+      break;
     }
-  } catch (std::exception const &ex) {
+  } catch (const std::exception &ex) {
     logger.logError("handleMessage error: ", ex.what());
   }
 }
