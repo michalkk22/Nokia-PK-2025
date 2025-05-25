@@ -12,6 +12,11 @@ SendingCallState::SendingCallState(Context &context,
   context.user.displayAlert("Calling", "Waiting for response...");
 }
 
+void SendingCallState::handleShutdown() {
+  logger.logInfo("Application shutdown in SendingCall state - dropping call.");
+  context.bts.sendCallDropped(recipient);
+}
+
 void SendingCallState::handleTimeout() {
   logger.logInfo("Call attempt timed out!");
   context.bts.sendCallDropped(recipient);
