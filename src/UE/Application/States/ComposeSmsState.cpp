@@ -6,7 +6,7 @@
 namespace ue {
 
 ComposeSmsState::ComposeSmsState(Context &context)
-    : BaseState(context, "ComposeSmsState") {
+    : ConnectedState(context, "ComposeSmsState") {
   logger.logInfo("Entered Compose SMS State – showing SMS composition screen");
   context.user.showSmsCompose();
 }
