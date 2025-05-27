@@ -20,7 +20,7 @@ public:
 
 private:
   common::PhoneNumber recipient;
-  const ITimerPort::Duration timeoutDuration = std::chrono::seconds{30};
+  const ITimerPort::Duration timeoutDuration = std::chrono::seconds{120};
   std::string prepareDisplayText(const std::string &prefix,
                                  const std::string &text);
 };
