@@ -14,6 +14,8 @@ public:
     BaseState(Context& context, const std::string& name);
     ~BaseState() override;
 
+    void handleShutdown() override;
+
     // ITimerEventsHandler interface
     void handleTimeout() override;
 
@@ -33,7 +35,7 @@ public:
     void handleCallReceived(common::PhoneNumber fromNumber) override;
     void handleItemSelected(std::optional<std::size_t> index) override;
     void handleCallTalkReceived(common::PhoneNumber fromNumber,
-                                std::string text) override;
+                                const std::string &text) override;
 
   protected:
     Context& context;

@@ -27,6 +27,7 @@ private:
     common::PrefixedLogger logger;
     ITimerEventsHandler* handler = nullptr;
     std::shared_ptr<std::atomic<bool>> cancelToken;
+    std::mutex cancelTokenMutex;
 };
 
 }

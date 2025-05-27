@@ -29,7 +29,7 @@ namespace ue
 
         common::PrefixedLogger logger;
         common::ITransport& transport;
-        common::PhoneNumber phoneNumber;
+        common::PhoneNumber myNumber;
 
         IBtsEventsHandler* handler = nullptr;
     };

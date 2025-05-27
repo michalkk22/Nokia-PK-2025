@@ -12,6 +12,7 @@ namespace ue
     {
     public:
         MOCK_METHOD(void, handleSib, (common::BtsId), (override));
+        MOCK_METHOD(void, handleShutdown, (), (override));
         MOCK_METHOD(void, handleAttachAccept, (), (override));
         MOCK_METHOD(void, handleAttachReject, (), (override));
         MOCK_METHOD(void, handleDisconnected, (), (override));
@@ -27,7 +28,9 @@ namespace ue
         MOCK_METHOD(void, handleCallDropped, (), (override));
         MOCK_METHOD(void, handleCallAccepted, (), (override));
         MOCK_METHOD(void, handleItemSelected, (std::optional<std::size_t> index), (override));
-        MOCK_METHOD(void, handleCallTalkReceived, (common::PhoneNumber fromNumber, std::string text), (override));
+        MOCK_METHOD(void, handleCallTalkReceived,
+                    (common::PhoneNumber fromNumber, const std::string &text),
+                    (override));
     };
 
 } // namespace ue

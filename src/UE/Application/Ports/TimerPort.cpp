@@ -1,4 +1,5 @@
 #include "TimerPort.hpp"
+#include <mutex>
 
 namespace ue {
 
@@ -11,7 +12,7 @@ void TimerPort::start(ITimerEventsHandler &handler) {
 }
 
 void TimerPort::stop() {
-  logger.logDebug("Stoped");
+  logger.logDebug("Stopped");
   stopTimer();
   handler = nullptr;
 }
@@ -26,19 +27,27 @@ void TimerPort::startTimer(Duration duration) {
   stopTimer();
 
   auto token = std::make_shared<std::atomic<bool>>(true);
-  cancelToken = token;
+  {
+    std::lock_guard<std::mutex> lock(cancelTokenMutex);
+    cancelToken = token;
+  }
 
   std::thread([this, duration, token]() {
     std::this_thread::sleep_for(duration);
     if (*token) {
-      handler->handleTimeout();
+      std::lock_guard<std::mutex> lock(cancelTokenMutex);
+      if (cancelToken == token && handler) {
+        handler->handleTimeout();
+      }
     }
   }).detach();
 }
 
 void TimerPort::stopTimer() {
+  std::lock_guard<std::mutex> lock(cancelTokenMutex);
   if (cancelToken) {
     *cancelToken = false;
+    cancelToken.reset();
   }
 
   logger.logDebug("Stop timer");

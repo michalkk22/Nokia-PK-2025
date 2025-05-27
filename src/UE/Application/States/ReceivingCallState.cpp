@@ -8,6 +8,12 @@ ReceivingCallState::ReceivingCallState(Context &context,
                                        common::PhoneNumber fromNumber)
     : ConnectedState(context, "ReceivingCallState"), fromNumber(fromNumber) {}
 
+void ReceivingCallState::handleShutdown() {
+  logger.logInfo(
+      "Application shutdown in ReceivingCall state - dropping call.");
+  context.bts.sendCallDropped(fromNumber);
+}
+
 void ReceivingCallState::handleUiAction() {}
 
 void ReceivingCallState::handleUiAccept() {

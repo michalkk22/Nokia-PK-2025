@@ -12,6 +12,7 @@ class IEventsHandler : public IBtsEventsHandler,
                        public ITimerEventsHandler {
 public:
   virtual ~IEventsHandler() = default;
+  virtual void handleShutdown() = 0;
   virtual void handleUiAction() = 0;
   virtual void handleUiBack() = 0;
   virtual void handleUiAccept() = 0;
@@ -24,7 +25,7 @@ public:
   virtual void handleCallAccepted() = 0;
   virtual void handleItemSelected(std::optional<std::size_t> index) = 0;
   virtual void handleCallTalkReceived(common::PhoneNumber fromNumber,
-                                      std::string text) = 0;
+                                      const std::string &text) = 0;
 };
 
 } // namespace ue

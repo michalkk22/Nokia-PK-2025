@@ -15,6 +15,8 @@ Application::Application(common::PhoneNumber phoneNumber,
 
 Application::~Application() { logger.logInfo("Stopped"); }
 
+void Application::handleShutdown() { context.state->handleShutdown(); }
+
 void Application::handleUiAction() {
   if (context.state)
     context.state->handleUiAction();
@@ -92,7 +94,7 @@ void Application::handleItemSelected(std::optional<std::size_t> index) {
 }
 
 void Application::handleCallTalkReceived(common::PhoneNumber fromNumber,
-                                         std::string text) {
+                                         const std::string &text) {
   if (context.state)
     context.state->handleCallTalkReceived(fromNumber, text);
 }

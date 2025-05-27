@@ -22,6 +22,9 @@ int main(int argc, char *argv[]) {
   user.start(app);
   timer.start(app);
   appEnv->startMessageLoop();
+  logger.logInfo("Application shutdown");
+  app.handleShutdown();
+  logger.logInfo("Stopping ports");
   bts.stop();
   user.stop();
   timer.stop();

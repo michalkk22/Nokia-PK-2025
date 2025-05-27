@@ -22,7 +22,9 @@ namespace ue
         MOCK_METHOD(void, handleCallReceived, (common::PhoneNumber fromNumber), (override));
         MOCK_METHOD(void, handleCallDropped, (), (override));
         MOCK_METHOD(void, handleCallAccepted, (), (override));
-        MOCK_METHOD(void, handleCallTalkReceived, (common::PhoneNumber fromNumber, std::string text), (override));
+        MOCK_METHOD(void, handleCallTalkReceived,
+                    (common::PhoneNumber fromNumber, const std::string &text),
+                    (override));
     };
 
     class IBtsPortMock : public IBtsPort

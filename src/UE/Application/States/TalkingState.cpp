@@ -10,6 +10,11 @@ TalkingState::TalkingState(Context &context, common::PhoneNumber recipient)
   context.timer.startTimer(timeoutDuration);
 };
 
+void TalkingState::handleShutdown() {
+  logger.logInfo("Application shutdown in Talking state - dropping call.");
+  context.bts.sendCallDropped(recipient);
+}
+
 void TalkingState::handleUiBack() {
   logger.logInfo("User dropped call - returning to main menu.");
   context.bts.sendCallDropped(recipient);
@@ -36,6 +41,17 @@ void TalkingState::handleCallReceived(common::PhoneNumber fromNumber) {
   dropAnotherCall(fromNumber);
 }
 
+void TalkingState::handleCallUnknownRecipient(common::PhoneNumber fromNumber) {
+  if (fromNumber == recipient) {
+    logger.logError("RRecipient disconncted.");
+    context.timer.stopTimer();
+    context.setState<ConnectedState>();
+    context.user.displayAlert("Call dropped", "Recipient disconnected");
+  } else {
+    logger.logError("Received call from unknown recipient: ", fromNumber);
+  }
+}
+
 void TalkingState::handleUiAccept() {}
 
 void TalkingState::handleUiAction() {
@@ -52,7 +68,7 @@ void TalkingState::handleUiAction() {
 }
 
 void TalkingState::handleCallTalkReceived(common::PhoneNumber fromNumber,
-                                          std::string text) {
+                                          const std::string &text) {
   if (fromNumber != recipient) {
     logger.logError("Received call talk from another number: ", fromNumber);
     return;
@@ -60,8 +76,6 @@ void TalkingState::handleCallTalkReceived(common::PhoneNumber fromNumber,
   context.timer.stopTimer();
 
   logger.logDebug("Received call talk from: ", fromNumber);
-
-  text.erase(0, 1); // remove the first character from incoming message
 
   context.user.addCallText(
       prepareDisplayText(std::to_string(fromNumber.value), text));
